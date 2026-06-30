@@ -9,618 +9,621 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='15' fill='%23ff2975'/%3E%3Cpath d='M10 20 Q16 8 22 20' fill='none' stroke='white' stroke-width='2' stroke-linecap='round'/%3E%3Ccircle cx='16' cy='8' r='3' fill='%23ff2975' stroke='white' stroke-width='1.5'/%3E%3C/svg%3E">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,300..700,50..100&family=DM+Sans:opsz,wght@9..40,300..700&display=swap" rel="stylesheet">
 <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
-<title>Dora Dondurma & Patisserie</title>
 <style>
-/* ── Reset & base ── */
+/* ── Reset & basics ── */
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
 body{
-  background:#0c0c14;
-  color:#f0eae0;
+  background:#faf5eb;
+  color:#2a2420;
   font-family:'DM Sans',sans-serif;
-  font-weight:350;
+  font-weight:400;
   overflow-x:hidden;
   line-height:1.6;
 }
 
-/* ── The Sundae Glass ── */
-.glass-wrapper{
-  position:relative;
-  max-width:100%;
-  margin:0 auto;
-  padding:0;
-}
-
-/* Glass edges — left and right neon strips */
-.glass-edge-l,.glass-edge-r{
+/* ── decorative sprinkles ── */
+.sprinkles{
   position:fixed;
-  top:0;
-  width:3px;
-  height:100vh;
-  z-index:100;
+  inset:0;
   pointer-events:none;
-  opacity:0.6;
+  z-index:0;
+  overflow:hidden;
 }
-.glass-edge-l{
-  left:0;
-  background:linear-gradient(180deg, 
-    #ff2975 0%, #ff2975 8%, 
-    #00e5ff 8%, #00e5ff 24%, 
-    #ff2975 24%, #ff2975 44%, 
-    #00e5ff 44%, #00e5ff 62%, 
-    #ff2975 62%, #ff2975 78%, 
-    #00e5ff 78%, #00e5ff 100%);
-  box-shadow:0 0 12px #ff297588,0 0 30px #00e5ff44;
-}
-.glass-edge-r{
-  right:0;
-  background:linear-gradient(180deg, 
-    #00e5ff 0%, #00e5ff 8%, 
-    #ff2975 8%, #ff2975 24%, 
-    #00e5ff 24%, #00e5ff 44%, 
-    #ff2975 44%, #ff2975 62%, 
-    #00e5ff 62%, #00e5ff 78%, 
-    #ff2975 78%, #ff2975 100%);
-  box-shadow:0 0 12px #00e5ff88,0 0 30px #ff297544;
-}
-
-/* Glass rim — top neon bar */
-.glass-rim{
-  position:fixed;
-  top:0;left:0;right:0;
-  height:4px;
-  z-index:100;
-  background:linear-gradient(90deg,#ff2975,#00e5ff,#ff2975);
-  box-shadow:0 0 20px #ff297566;
-  pointer-events:none;
-}
-
-/* Glass base — bottom neon bar */
-.glass-base{
-  position:fixed;
-  bottom:0;left:0;right:0;
-  height:4px;
-  z-index:100;
-  background:linear-gradient(90deg,#00e5ff,#ff2975,#00e5ff);
-  box-shadow:0 0 20px #00e5ff66;
-  pointer-events:none;
-}
-
-/* ── The Spoon (scroll indicator) ── */
-.spoon-indicator{
-  position:fixed;
-  right:16px;
-  top:50%;
-  transform:translateY(-50%);
-  z-index:99;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  gap:6px;
-  opacity:0.5;
-  transition:opacity .4s;
-  pointer-events:none;
-}
-.spoon-indicator:hover{opacity:0.8}
-.spoon-handle{
-  width:2px;
-  height:60px;
-  background:linear-gradient(180deg,#ff2975,#00e5ff);
+.sprinkles span{
+  position:absolute;
+  width:8px;height:8px;
   border-radius:2px;
+  opacity:0.25;
+  animation:fall linear infinite;
 }
-.spoon-bowl{
-  width:10px;height:10px;
-  border:2px solid #ff2975;
-  border-radius:50%;
-  background:#ff297522;
-  box-shadow:0 0 10px #ff297544;
-  transition:all .3s;
-}
-.spoon-label{
-  writing-mode:vertical-rl;
-  font-size:9px;
-  letter-spacing:3px;
-  text-transform:uppercase;
-  color:#ff2975;
-  font-weight:600;
-  margin-top:4px;
+.sprinkle-pink{background:#ff2975}
+.sprinkle-cyan{background:#00c8d6}
+.sprinkle-gold{background:#f5a623}
+@keyframes fall{
+  0%{transform:translateY(-20px) rotate(0deg);opacity:0}
+  10%{opacity:0.25}
+  90%{opacity:0.15}
+  100%{transform:translateY(100vh) rotate(360deg);opacity:0}
 }
 
-/* ── Layer sections ── */
+/* ── layers ── */
 .layer{
   position:relative;
-  min-height:100vh;
+  min-height:80vh;
   display:flex;
   flex-direction:column;
   justify-content:center;
-  padding:80px 48px 80px 56px;
-  overflow:hidden;
+  padding:80px 32px;
+  z-index:1;
 }
 .layer-inner{
-  max-width:520px;
+  max-width:640px;
+  margin:0 auto;
+  width:100%;
   position:relative;
   z-index:2;
 }
 
-/* ── Layer 0 — Cherry (Hero) ── */
-.layer-cherry{
+/* ── LAYER 0 — HERO ── */
+.layer-hero{
   min-height:100vh;
-  justify-content:flex-end;
-  padding-bottom:120px;
-  background:radial-gradient(ellipse 600px 300px at 50% 30%, #ff297508, transparent);
+  justify-content:center;
+  padding-top:60px;
+  background:
+    radial-gradient(ellipse 600px 200px at 30% 80%, #ff297506, transparent),
+    radial-gradient(ellipse 400px 300px at 80% 30%, #00c8d608, transparent);
 }
-.layer-cherry .layer-inner{max-width:600px}
+.hero-row{
+  display:flex;
+  flex-wrap:wrap;
+  gap:40px;
+  align-items:center;
+}
+.hero-text{flex:1;min-width:280px}
 .hero-badge{
   display:inline-flex;
   align-items:center;
-  gap:6px;
+  gap:5px;
   font-size:11px;
-  letter-spacing:4px;
+  letter-spacing:3px;
   text-transform:uppercase;
   color:#ff2975;
-  border:1px solid #ff297544;
-  padding:6px 14px;
+  background:#ff297508;
+  padding:5px 12px;
   border-radius:100px;
-  margin-bottom:24px;
-  font-weight:500;
-  opacity:0;
-  animation:fadeSlide .8s .2s forwards;
-}
-.hero-title{
-  font-family:'Fraunces',serif;
-  font-optical-sizing:auto;
   font-weight:600;
-  font-variation-settings:"SOFT" 85;
-  font-size:clamp(3rem,10vw,6rem);
-  line-height:0.95;
+  margin-bottom:20px;
+  border:1px solid #ff297515;
+}
+.hero-logo{
+  font-family:'Fraunces',serif;
+  font-weight:600;
+  font-size:clamp(3.2rem,10vw,6rem);
+  line-height:0.92;
   letter-spacing:-0.03em;
-  margin-bottom:12px;
-  opacity:0;
-  animation:fadeSlide .8s .4s forwards;
 }
-.hero-title .pink{color:#ff2975}
-.hero-title .cyan{color:#00e5ff}
-.hero-sub{
-  font-size:clamp(0.95rem,2vw,1.15rem);
-  color:#a09888;
+.hero-logo .pink{color:#ff2975}
+.hero-logo .cyan{color:#00c8d6}
+.hero-logo .sub{
+  display:block;
+  font-size:0.3em;
+  font-weight:400;
+  color:#8a7a70;
+  letter-spacing:0.05em;
+  margin-top:4px;
+  font-family:'DM Sans',sans-serif;
+}
+.hero-desc{
+  font-size:1.05rem;
+  color:#6a5a50;
+  margin-top:12px;
   max-width:400px;
-  opacity:0;
-  animation:fadeSlide .8s .6s forwards;
+  line-height:1.5;
 }
-.hero-garnish{
+
+/* ── hero visuals ── */
+.hero-visual{
+  flex:0 0 200px;
+  position:relative;
+}
+.hero-cone{
+  width:160px;
+  height:220px;
+  position:relative;
+  margin:0 auto;
+}
+.cone-top{
+  width:120px;height:80px;
+  border-radius:50px 50px 20px 20px;
+  background:linear-gradient(135deg,#ff2975,#ff6495);
+  margin:0 auto;
+  position:relative;
+  box-shadow:0 4px 20px #ff297544;
+}
+.cone-top::after{
+  content:'';
   position:absolute;
-  top:-40px;right:-20px;
-  font-size:80px;
-  opacity:0.3;
-  pointer-events:none;
-  animation:sway 3s ease-in-out infinite;
+  top:20px;left:50%;
+  transform:translateX(-50%);
+  width:50px;height:30px;
+  border-radius:50%;
+  background:#ff8fab55;
+}
+.cone-body{
+  width:0;height:0;
+  border-left:70px solid transparent;
+  border-right:70px solid transparent;
+  border-top:100px solid #d4a868;
+  margin:0 auto;
+  margin-top:-2px;
+  filter:drop-shadow(0 4px 8px #00000011);
+}
+.cone-body::after{
+  content:'';
+  position:absolute;
+  bottom:15px;left:50%;
+  transform:translateX(-50%);
+  width:60px;height:4px;
+  background:#c49658;
+  border-radius:2px;
+}
+.cherry{
+  position:absolute;
+  top:-8px;right:4px;
+  width:28px;height:28px;
+  background:#cc2244;
+  border-radius:50%;
+  box-shadow:0 2px 6px #cc224466;
+}
+.cherry::after{
+  content:'';
+  position:absolute;
+  top:-10px;left:50%;
+  transform:translateX(-50%);
+  width:2px;height:14px;
+  background:#4a403a;
+  border-radius:1px;
+}
+.cherry::before{
+  content:'';
+  position:absolute;
+  top:-12px;left:50%;
+  transform:translateX(3px);
+  width:10px;height:8px;
+  background:#3a7060;
+  border-radius:50% 50% 50% 0;
 }
 
-/* ── Product layers ── */
-.layer-label{
+/* ── layer header ── */
+.layer-header{
+  display:flex;
+  align-items:center;
+  gap:10px;
   font-size:10px;
-  letter-spacing:5px;
+  letter-spacing:4px;
   text-transform:uppercase;
-  margin-bottom:16px;
   font-weight:600;
+  margin-bottom:8px;
 }
-.layer-label.pink{color:#ff2975}
-.layer-label.cyan{color:#00e5ff}
-.layer-heading{
+.layer-header .bar{
+  width:24px;height:2px;
+  border-radius:2px;
+}
+.layer-header .bar.pink{background:#ff2975}
+.layer-header .bar.cyan{background:#00c8d6}
+.layer-header .bar.gold{background:#f5a623}
+
+.layer-title{
   font-family:'Fraunces',serif;
-  font-optical-sizing:auto;
   font-weight:550;
-  font-variation-settings:"SOFT" 85;
-  font-size:clamp(1.8rem,4vw,2.6rem);
-  line-height:1.1;
-  margin-bottom:24px;
+  font-size:clamp(1.6rem,3.5vw,2.4rem);
+  line-height:1.15;
+  margin-bottom:6px;
 }
-.layer-desc{
-  color:#a09888;
-  font-size:0.95rem;
-  margin-bottom:32px;
+.layer-sub{
+  color:#7a6a5e;
+  font-size:0.92rem;
+  margin-bottom:28px;
+  max-width:420px;
 }
 
-/* ── Product cards ── */
+/* ── LAYER BACKGROUND TINTS ── */
+.layer-dondurma{
+  background:linear-gradient(180deg,#faf5eb 0%,#fff0f5 15%,#fff5fa 100%);
+}
+.layer-pastane{
+  background:linear-gradient(180deg,#fdf6f0 0%,#fdf3ea 15%,#faf5eb 100%);
+  position:relative;
+}
+.layer-icecek{
+  background:linear-gradient(180deg,#f0faf8 0%,#eefaf5 15%,#faf5eb 100%);
+}
+.layer-waffle{
+  background:linear-gradient(180deg,#fdf8f0 0%,#faf5eb 100%);
+}
+/* wavy dividers between pastel layers */
+.layer::after{
+  content:'';
+  position:absolute;
+  bottom:-12px;
+  left:0;right:0;
+  height:24px;
+  z-index:3;
+  pointer-events:none;
+}
+.layer-dondurma::after{
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 24'%3E%3Cpath d='M0,12 Q150,24 300,12 T600,12 T900,12 T1200,12' fill='none' stroke='%23ff297515' stroke-width='2'/%3E%3C/svg%3E") repeat-x;
+  background-size:600px 24px;
+}
+.layer-pastane::after{
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 24'%3E%3Cpath d='M0,12 Q150,24 300,12 T600,12 T900,12 T1200,12' fill='none' stroke='%23f5a62320' stroke-width='2'/%3E%3C/svg%3E") repeat-x;
+  background-size:600px 24px;
+}
+.layer-icecek::after{
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 24'%3E%3Cpath d='M0,12 Q150,24 300,12 T600,12 T900,12 T1200,12' fill='none' stroke='%2300c8d620' stroke-width='2'/%3E%3C/svg%3E") repeat-x;
+  background-size:600px 24px;
+}
+.layer-waffle::after{display:none}
+
+/* ── Products grid ── */
 .products{
   display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(180px,1fr));
-  gap:12px;
+  grid-template-columns:repeat(auto-fill,minmax(160px,1fr));
+  gap:10px;
 }
 .product-card{
-  background:#14141e;
-  border:1px solid #1e1e2a;
-  border-radius:12px;
-  padding:16px;
+  background:white;
+  border:1px solid #e8e0d8;
+  border-radius:16px;
+  padding:16px 14px;
   cursor:pointer;
-  transition:all .3s;
+  transition:all .25s;
   position:relative;
   overflow:hidden;
+  box-shadow:0 1px 3px #00000008;
 }
 .product-card::before{
   content:'';
   position:absolute;
   top:0;left:0;right:0;
-  height:2px;
+  height:3px;
   opacity:0;
-  transition:opacity .3s;
+  transition:opacity .25s;
 }
+.product-card.pink{background:#fff8fa}
+.product-card.pink::before{background:#ff2975}
+.product-card.cyan{background:#f8fcff}
+.product-card.cyan::before{background:#00c8d6}
+.product-card.gold{background:#fffaf5}
+.product-card.gold::before{background:#f5a623}
 .product-card:hover{
-  background:#1a1a28;
-  border-color:#ff297544;
-  transform:translateY(-2px);
+  transform:translateY(-3px) rotate(-0.5deg);
+  box-shadow:0 6px 20px #00000010;
 }
 .product-card:hover::before{opacity:1}
-.product-card.pink::before{background:#ff2975;box-shadow:0 0 12px #ff2975}
-.product-card.cyan::before{background:#00e5ff;box-shadow:0 0 12px #00e5ff}
 .product-icon{
-  font-size:24px;
-  margin-bottom:8px;
-  line-height:1;
+  font-size:22px;
+  margin-bottom:6px;
+  display:inline-block;
 }
 .product-icon .pink{color:#ff2975}
-.product-icon .cyan{color:#00e5ff}
+.product-icon .cyan{color:#00c8d6}
+.product-icon .gold{color:#f5a623}
 .product-name{
   font-family:'Fraunces',serif;
   font-weight:500;
-  font-variation-settings:"SOFT" 85;
-  font-size:1.05rem;
-  margin-bottom:4px;
+  font-size:0.95rem;
+  margin-bottom:2px;
+  color:#2a2420;
 }
 .product-desc{
-  font-size:0.82rem;
-  color:#6a6560;
-  line-height:1.4;
+  font-size:0.78rem;
+  color:#8a7a6e;
+  line-height:1.35;
 }
 
-/* ── Glass curve decoration ── */
-.glass-curve{
-  position:absolute;
-  bottom:-40px;
-  left:50%;
-  transform:translateX(-50%);
-  width:80%;
-  max-width:500px;
-  height:80px;
-  border:2px solid #00e5ff22;
-  border-top:none;
-  border-radius:0 0 50% 50%;
-  pointer-events:none;
-}
-
-/* ── Layer 1 — Dondurma ── */
-.layer-dondurma{
-  background:radial-gradient(ellipse 500px 400px at 30% 50%, #ff297508, transparent);
-}
-
-/* ── Layer 2 — Pastane ── */
-.layer-pastane{
-  background:radial-gradient(ellipse 500px 400px at 70% 50%, #00e5ff08, transparent);
-}
-
-/* ── Layer 3 — İçecekler ── */
-.layer-icecek{
-  background:radial-gradient(ellipse 500px 400px at 50% 30%, #ff297508, transparent);
-}
-
-/* ── Layer 4 — Waffle + Contact ── */
-.layer-waffle{
-  min-height:100vh;
-  background:radial-gradient(ellipse 600px 400px at 50% 60%, #00e5ff08, transparent);
-  padding-bottom:100px;
-}
-.contact-row{
-  display:flex;
-  flex-wrap:wrap;
-  gap:12px;
-  margin-top:24px;
-}
-.contact-btn{
+/* ── inline links (NOT buttons) ── */
+.inline-link{
   display:inline-flex;
   align-items:center;
-  gap:8px;
-  padding:12px 20px;
-  border-radius:100px;
+  gap:4px;
+  color:#ff2975;
   text-decoration:none;
-  font-size:0.9rem;
   font-weight:500;
-  transition:all .3s;
-  background:#14141e;
-  border:1px solid #1e1e2a;
-  color:#f0eae0;
+  font-size:0.9rem;
+  transition:gap .25s;
+  border-bottom:1px solid transparent;
 }
-.contact-btn:hover{
-  border-color:#ff2975;
-  background:#1a1a28;
-  transform:translateY(-2px);
-}
-.contact-btn i{font-size:1.1rem}
-.contact-btn .pink{color:#ff2975}
-.contact-btn .cyan{color:#00e5ff}
+.inline-link:hover{gap:8px}
+.inline-link .arrow{transition:transform .25s;display:inline-block}
+.inline-link:hover .arrow{transform:translateX(3px)}
+.inline-link.cyan{color:#00c8d6}
+.inline-link.gold{color:#f5a623}
 
-/* ── Animations ── */
-@keyframes fadeSlide{
-  from{opacity:0;transform:translateY(20px)}
-  to{opacity:1;transform:translateY(0)}
+/* ── contact area ── */
+.contact-area{
+  margin-top:32px;
+  padding-top:24px;
+  border-top:1px solid #e8e0d8;
+  display:flex;
+  flex-wrap:wrap;
+  gap:16px;
+  align-items:center;
 }
-@keyframes sway{
-  0%,100%{transform:rotate(-5deg)}
-  50%{transform:rotate(5deg)}
+.contact-area p{
+  color:#7a6a5e;
+  font-size:0.85rem;
+  flex:1;
+  min-width:200px;
+}
+.contact-links{
+  display:flex;
+  gap:16px;
+  flex-wrap:wrap;
 }
 
-/* ── Scroll reveal ── */
+/* ── scroll reveal ── */
 .reveal{
   opacity:0;
-  transform:translateY(30px);
-  transition:opacity .7s ease,transform .7s ease;
+  transform:translateY(18px);
+  transition:opacity .5s ease,transform .5s ease;
 }
-.reveal.visible{
-  opacity:1;
-  transform:translateY(0);
-}
-.reveal-delay-1{transition-delay:.1s}
-.reveal-delay-2{transition-delay:.2s}
-.reveal-delay-3{transition-delay:.3s}
-.reveal-delay-4{transition-delay:.4s}
+.reveal.visible{opacity:1;transform:translateY(0)}
+.r1{transition-delay:.05s}
+.r2{transition-delay:.12s}
+.r3{transition-delay:.2s}
+.r4{transition-delay:.28s}
+.r5{transition-delay:.36s}
 
-/* ── Responsive ── */
+/* ── foot ── */
+.foot{
+  text-align:center;
+  padding:32px 24px;
+  font-size:0.75rem;
+  color:#aaa098;
+  letter-spacing:1px;
+  background:#f5f0e8;
+}
+.foot a{color:#ff2975;text-decoration:none}
+
+/* ── responsive ── */
 @media(max-width:640px){
-  .layer{padding:60px 20px 60px 28px}
+  .layer{padding:60px 20px}
   .products{grid-template-columns:1fr 1fr}
-  .spoon-indicator{right:8px}
-  .spoon-handle{height:40px}
-  .glass-edge-l,.glass-edge-r{width:2px}
-  .hero-title{font-size:clamp(2.2rem,12vw,3.5rem)}
-  .contact-row{flex-direction:column}
+  .hero-row{flex-direction:column;gap:24px}
+  .hero-visual{flex:0;order:-1}
+  .hero-cone{width:120px;height:160px}
+  .cone-top{width:90px;height:60px}
+  .cone-body{
+    border-left-width:52px;
+    border-right-width:52px;
+    border-top-width:75px;
+  }
 }
 @media(max-width:400px){
   .products{grid-template-columns:1fr}
-  .layer{padding:48px 16px 48px 24px}
+  .layer{padding:40px 16px}
 }
-
-/* ── Footer ── */
-.footer-note{
-  text-align:center;
-  padding:24px;
-  font-size:0.75rem;
-  color:#3a3530;
-  letter-spacing:1px;
-}
-.footer-note a{color:#ff297566;text-decoration:none}
-.footer-note a:hover{color:#ff2975}
 </style>
 </head>
 <body>
 
-<!-- Glass edges -->
-<div class="glass-edge-l"></div>
-<div class="glass-edge-r"></div>
-<div class="glass-rim"></div>
-<div class="glass-base"></div>
-
-<!-- Spoon indicator -->
-<div class="spoon-indicator">
-  <div class="spoon-bowl"></div>
-  <div class="spoon-handle"></div>
-  <span class="spoon-label">Keşfet</span>
+<!-- ── floating sprinkles ── -->
+<div class="sprinkles" aria-hidden="true">
+  <span class="sprinkle-pink" style="left:5%;animation-duration:12s;animation-delay:0s"></span>
+  <span class="sprinkle-cyan" style="left:15%;animation-duration:15s;animation-delay:2s"></span>
+  <span class="sprinkle-gold" style="left:25%;animation-duration:11s;animation-delay:4s"></span>
+  <span class="sprinkle-pink" style="left:35%;animation-duration:14s;animation-delay:1s"></span>
+  <span class="sprinkle-cyan" style="left:45%;animation-duration:13s;animation-delay:5s"></span>
+  <span class="sprinkle-gold" style="left:55%;animation-duration:16s;animation-delay:3s"></span>
+  <span class="sprinkle-pink" style="left:65%;animation-duration:10s;animation-delay:6s"></span>
+  <span class="sprinkle-cyan" style="left:75%;animation-duration:14s;animation-delay:0s"></span>
+  <span class="sprinkle-gold" style="left:85%;animation-duration:12s;animation-delay:2s"></span>
+  <span class="sprinkle-pink" style="left:92%;animation-duration:15s;animation-delay:4s"></span>
 </div>
 
-<div class="glass-wrapper">
-
-<!-- ══════ LAYER 0 — CHERRY (HERO) ══════ -->
-<section class="layer layer-cherry">
+<!-- ══════ HERO ══════ -->
+<section class="layer layer-hero">
   <div class="layer-inner">
-    <div class="hero-badge"><i class="ph-duotone ph-sparkle"></i> Mimaroba</div>
-    <h1 class="hero-title">
-      <span class="pink">Dora</span><br>
-      <span class="cyan">Dondurma</span><br>
-      <span style="font-size:0.4em;color:#6a6560;letter-spacing:-0.01em">&amp; Patisserie</span>
-    </h1>
-    <p class="hero-sub">
-      Mimaroba'nın pembe ve cyan ışıltılı tatlı durağı. Dondurma, pastane, içecekler ve waffle — her şey doğal ve el yapımı.
-    </p>
+    <div class="hero-row">
+      <div class="hero-text">
+        <div class="hero-badge reveal">🍦 Mimaroba</div>
+        <h1 class="hero-logo reveal r1">
+          <span class="pink">Dora</span><br>
+          <span class="cyan">Dondurma</span>
+          <span class="sub">&amp; Patisserie</span>
+        </h1>
+        <p class="hero-desc reveal r2">
+          Mimaroba'nın pembe ışıltılı tatlı durağı. Dondurma, pastane, içecekler, waffle — her şey taze ve el yapımı.
+        </p>
+        <div class="reveal r3" style="margin-top:24px">
+          <a href="#dondurma" class="inline-link">
+            Lezzetleri keşfet <span class="arrow">→</span>
+          </a>
+        </div>
+      </div>
+      <div class="hero-visual reveal r2">
+        <div class="hero-cone">
+          <div class="cherry"></div>
+          <div class="cone-top"></div>
+          <div class="cone-body"></div>
+        </div>
+      </div>
+    </div>
   </div>
-  <div class="hero-garnish">🍒</div>
 </section>
 
-<!-- ══════ LAYER 1 — DONDURMA ══════ -->
+<!-- ══════ DONDURMA ══════ -->
 <section class="layer layer-dondurma" id="dondurma">
   <div class="layer-inner">
-    <div class="layer-label pink reveal">01 · Dondurma</div>
-    <h2 class="layer-heading reveal reveal-delay-1">Soğuk <span style="color:#ff2975">lezzetler</span></h2>
-    <p class="layer-desc reveal reveal-delay-2">Her gün taze sütle hazırlanan, katkısız dondurmalarımız. Geleneksel lezzetler ve özel tarifler.</p>
+    <div class="layer-header reveal"><span class="bar pink"></span> 01 · Dondurma</div>
+    <h2 class="layer-title reveal r1">Soğuk <span style="color:#ff2975">lezzetler</span></h2>
+    <p class="layer-sub reveal r2">Her gün taze sütle hazırlanan dondurmalar. Geleneksel tarifler ve özel çeşitler.</p>
     <div class="products">
-      <div class="product-card pink reveal reveal-delay-2">
-        <div class="product-icon"><i class="ph-duotone ph-flower-lotus ph-fill" style="color:#ff2975"></i></div>
+      <div class="product-card pink reveal r2">
+        <div class="product-icon"><i class="ph-duotone ph-flower-lotus pink"></i></div>
         <div class="product-name">Sakızlı Dondurma</div>
-        <div class="product-desc">Geleneksel sakız aroması, kremamsı doku</div>
+        <div class="product-desc">Geleneksel sakız aroması, kremamsı kıvam</div>
       </div>
-      <div class="product-card pink reveal reveal-delay-3">
-        <div class="product-icon"><i class="ph-duotone ph-chocolate ph-fill" style="color:#ff2975"></i></div>
+      <div class="product-card pink reveal r3">
+        <div class="product-icon"><i class="ph-duotone ph-drop pink"></i></div>
         <div class="product-name">Sade Dondurma</div>
         <div class="product-desc">Doğal kaymak tadı, katkısız, tam kıvam</div>
       </div>
-      <div class="product-card pink reveal reveal-delay-4">
-        <div class="product-icon"><i class="ph-duotone ph-leaf ph-fill" style="color:#ff2975"></i></div>
+      <div class="product-card pink reveal r4">
+        <div class="product-icon"><i class="ph-duotone ph-leaf pink"></i></div>
         <div class="product-name">Antep Fıstıklı</div>
-        <div class="product-desc">Özel antep fıstığıyla hazırlanan enfes lezzet</div>
+        <div class="product-desc">Özel fıstıkla hazırlanan enfes lezzet</div>
       </div>
-      <div class="product-card pink reveal reveal-delay-4">
-        <div class="product-icon"><i class="ph-duotone ph-sun ph-fill" style="color:#ff2975"></i></div>
+      <div class="product-card pink reveal r5">
+        <div class="product-icon"><i class="ph-duotone ph-sun pink"></i></div>
         <div class="product-name">Meyveli Çeşitler</div>
-        <div class="product-desc">Mevsim meyveleriyle hazırlanan taze dondurmalar</div>
+        <div class="product-desc">Mevsim meyveleriyle taze dondurmalar</div>
       </div>
+    </div>
+    <div class="reveal r5" style="margin-top:16px">
+      <a href="#pastane" class="inline-link">Sonraki <span class="arrow">→</span></a>
     </div>
   </div>
 </section>
 
-<!-- ══════ LAYER 2 — PASTANE ══════ -->
+<!-- ══════ PASTANE ══════ -->
 <section class="layer layer-pastane" id="pastane">
   <div class="layer-inner">
-    <div class="layer-label cyan reveal">02 · Pastane</div>
-    <h2 class="layer-heading reveal reveal-delay-1">Tatlı <span style="color:#00e5ff">dokunuşlar</span></h2>
-    <p class="layer-desc reveal reveal-delay-2">Usta ellerden çıkan taze pasta ve tatlılar. Her biri özenle hazırlanır.</p>
+    <div class="layer-header reveal"><span class="bar gold"></span> 02 · Pastane</div>
+    <h2 class="layer-title reveal r1">Tatlı <span style="color:#f5a623">dokunuşlar</span></h2>
+    <p class="layer-sub reveal r2">Usta ellerden çıkan taze pasta ve tatlılar. Her biri özenle hazırlanır.</p>
     <div class="products">
-      <div class="product-card cyan reveal reveal-delay-2">
-        <div class="product-icon"><i class="ph-duotone ph-cake ph-fill" style="color:#00e5ff"></i></div>
+      <div class="product-card gold reveal r2">
+        <div class="product-icon"><i class="ph-duotone ph-cake gold"></i></div>
         <div class="product-name">Trileçe</div>
-        <div class="product-desc">İtalyan usulü üç sütlü tatlı, hafif ve kremsi</div>
+        <div class="product-desc">Üç sütlü İtalyan tatlısı, hafif ve kremsi</div>
       </div>
-      <div class="product-card cyan reveal reveal-delay-3">
-        <div class="product-icon"><i class="ph-duotone ph-cookie ph-fill" style="color:#00e5ff"></i></div>
+      <div class="product-card gold reveal r3">
+        <div class="product-icon"><i class="ph-duotone ph-cookie gold"></i></div>
         <div class="product-name">Tiramisu</div>
-        <div class="product-desc">İtalyan kahveli pasta, mascarpone ile</div>
+        <div class="product-desc">Kahveli pasta, mascarpone kremasıyla</div>
       </div>
-      <div class="product-card cyan reveal reveal-delay-4">
-        <div class="product-icon"><i class="ph-duotone ph-tray ph-fill" style="color:#00e5ff"></i></div>
-        <div class="product-name">Baklava Çeşitleri</div>
-        <div class="product-desc">Geleneksel incecik hamur, bol fıstıklı</div>
+      <div class="product-card gold reveal r4">
+        <div class="product-icon"><i class="ph-duotone ph-tray gold"></i></div>
+        <div class="product-name">Baklava</div>
+        <div class="product-desc">İncecik hamur, bol Antep fıstıklı</div>
       </div>
-      <div class="product-card cyan reveal reveal-delay-4">
-        <div class="product-icon"><i class="ph-duotone ph-drop-half-bottom ph-fill" style="color:#00e5ff"></i></div>
-        <div class="product-name">Islak Kek / Brownie</div>
-        <div class="product-desc">Yanında dondurmayla servis edilen nefis tatlı</div>
+      <div class="product-card gold reveal r5">
+        <div class="product-icon"><i class="ph-duotone ph-drop-half-bottom gold"></i></div>
+        <div class="product-name">Islak Kek</div>
+        <div class="product-desc">Yanında dondurmayla, nefis brownie</div>
       </div>
+    </div>
+    <div class="reveal r5" style="margin-top:16px">
+      <a href="#icecekler" class="inline-link gold">Sonraki <span class="arrow">→</span></a>
     </div>
   </div>
 </section>
 
-<!-- ══════ LAYER 3 — İÇECEKLER ══════ -->
+<!-- ══════ İÇECEKLER ══════ -->
 <section class="layer layer-icecek" id="icecekler">
   <div class="layer-inner">
-    <div class="layer-label pink reveal">03 · İçecekler</div>
-    <h2 class="layer-heading reveal reveal-delay-1">Ferahlatıcı <span style="color:#ff2975">lezzetler</span></h2>
-    <p class="layer-desc reveal reveal-delay-2">Sıcak ve soğuk içeceklerle tatlınızı taçlandırın.</p>
+    <div class="layer-header reveal"><span class="bar cyan"></span> 03 · İçecekler</div>
+    <h2 class="layer-title reveal r1">Ferahlatıcı <span style="color:#00c8d6">lezzetler</span></h2>
+    <p class="layer-sub reveal r2">Sıcak ve soğuk içeceklerle tatlınızı taçlandırın.</p>
     <div class="products">
-      <div class="product-card pink reveal reveal-delay-2">
-        <div class="product-icon"><i class="ph-duotone ph-coffee ph-fill" style="color:#ff2975"></i></div>
+      <div class="product-card cyan reveal r2">
+        <div class="product-icon"><i class="ph-duotone ph-coffee cyan"></i></div>
         <div class="product-name">Türk Kahvesi</div>
-        <div class="product-desc">Geleneksel cezvede pişirilmiş, köpüklü kahve</div>
+        <div class="product-desc">Cezvede pişmiş, köpüklü, geleneksel</div>
       </div>
-      <div class="product-card pink reveal reveal-delay-3">
-        <div class="product-icon"><i class="ph-duotone ph-martini ph-fill" style="color:#ff2975"></i></div>
+      <div class="product-card cyan reveal r3">
+        <div class="product-icon"><i class="ph-duotone ph-martini cyan"></i></div>
         <div class="product-name">Soğuk Kahve</div>
-        <div class="product-desc">Soğuk demlenmiş, sütle buluşan enerji deposu</div>
+        <div class="product-desc">Soğuk demlenmiş, sütle enerji deposu</div>
       </div>
-      <div class="product-card pink reveal reveal-delay-4">
-        <div class="product-icon"><i class="ph-duotone ph-lemon ph-fill" style="color:#ff2975"></i></div>
+      <div class="product-card cyan reveal r4">
+        <div class="product-icon"><i class="ph-duotone ph-lemon cyan"></i></div>
         <div class="product-name">Limonata</div>
-        <div class="product-desc">Taze sıkılmış limon, nane ve buzla ferahlık</div>
+        <div class="product-desc">Taze sıkım, nane ve buzla ferahlık</div>
       </div>
-      <div class="product-card pink reveal reveal-delay-4">
-        <div class="product-icon"><i class="ph-duotone ph-milk ph-fill" style="color:#ff2975"></i></div>
+      <div class="product-card cyan reveal r5">
+        <div class="product-icon"><i class="ph-duotone ph-milk cyan"></i></div>
         <div class="product-name">Milkshake</div>
         <div class="product-desc">Dondurmalı, kremalı, bol lezzetli</div>
       </div>
     </div>
+    <div class="reveal r5" style="margin-top:16px">
+      <a href="#waffle" class="inline-link cyan">Sonraki <span class="arrow">→</span></a>
+    </div>
   </div>
 </section>
 
-<!-- ══════ LAYER 4 — WAFFLE + CONTACT ══════ -->
+<!-- ══════ WAFFLE + CONTACT ══════ -->
 <section class="layer layer-waffle" id="waffle">
   <div class="layer-inner">
-    <div class="layer-label cyan reveal">04 · Waffle</div>
-    <h2 class="layer-heading reveal reveal-delay-1">Sıcak <span style="color:#00e5ff">vuruş</span></h2>
-    <p class="layer-desc reveal reveal-delay-2">Çıtır çıtır waffle, dilediğin sos ve meyvelerle. Yanında bir top dondurmayla mükemmel ikili.</p>
+    <div class="layer-header reveal"><span class="bar gold"></span> 04 · Waffle</div>
+    <h2 class="layer-title reveal r1">Sıcak <span style="color:#f5a623">vuruş</span></h2>
+    <p class="layer-sub reveal r2">Çıtır çıtır waffle, dilediğin sos ve meyvelerle. Yanında bir top dondurmayla mükemmel ikili.</p>
     <div class="products">
-      <div class="product-card cyan reveal reveal-delay-2">
-        <div class="product-icon"><i class="ph-duotone ph-heart-straight ph-fill" style="color:#00e5ff"></i></div>
+      <div class="product-card gold reveal r2">
+        <div class="product-icon"><i class="ph-duotone ph-heart-straight gold"></i></div>
         <div class="product-name">Klasik Waffle</div>
-        <div class="product-desc">Çikolata soslu, muzlu, krem şantili</div>
+        <div class="product-desc">Çikolata sos, muz, krem şanti</div>
       </div>
-      <div class="product-card cyan reveal reveal-delay-3">
-        <div class="product-icon"><i class="ph-duotone ph-strawberry ph-fill" style="color:#00e5ff"></i></div>
-        <div class="product-name">Orman Meyveli Waffle</div>
-        <div class="product-desc">Çilek, böğürtlen, frambuaz — bol meyveli</div>
+      <div class="product-card gold reveal r3">
+        <div class="product-icon"><i class="ph-duotone ph-strawberry gold"></i></div>
+        <div class="product-name">Orman Meyveli</div>
+        <div class="product-desc">Çilek, böğürtlen, frambuaz</div>
       </div>
-      <div class="product-card cyan reveal reveal-delay-4">
-        <div class="product-icon"><i class="ph-duotone ph-lightning ph-fill" style="color:#00e5ff"></i></div>
+      <div class="product-card gold reveal r4">
+        <div class="product-icon"><i class="ph-duotone ph-lightning gold"></i></div>
         <div class="product-name">Karışık Waffle</div>
-        <div class="product-desc">İstediğin tüm malzemelerle özel waffle</div>
+        <div class="product-desc">İstediğin tüm malzemelerle özel</div>
       </div>
     </div>
 
-    <!-- Contact -->
-    <div class="reveal reveal-delay-4" style="margin-top:40px">
-      <div class="layer-label pink reveal">Bize Ulaşın</div>
-      <p style="color:#6a6560;font-size:0.85rem;margin-bottom:12px">Dora Dondurma &amp; Patisserie · Mimaroba, Büyükçekmece</p>
-      <div class="contact-row">
-        <a href="https://www.instagram.com/dora_dondurma/" target="_blank" rel="noopener" class="contact-btn">
-          <i class="ph-duotone ph-instagram-logo pink"></i> @dora_dondurma
+    <!-- CONTACT — inline links, no generic buttons -->
+    <div class="contact-area reveal r4">
+      <p>
+        <strong>Dora Dondurma &amp; Patisserie</strong><br>
+        Mimaroba, Büyükçekmece
+      </p>
+      <div class="contact-links">
+        <a href="https://www.instagram.com/dora_dondurma/" target="_blank" rel="noopener" class="inline-link">
+          <i class="ph-duotone ph-instagram-logo" style="font-size:1.1rem"></i> @dora_dondurma
         </a>
-        <a href="#" class="contact-btn">
-          <i class="ph-duotone ph-map-pin cyan"></i> Mimaroba'da bizi bulun
+        <span style="color:#d0c8c0">·</span>
+        <a href="#" class="inline-link cyan">
+          <i class="ph-duotone ph-map-pin" style="font-size:1.1rem"></i> Mimaroba'da bizi bul
         </a>
       </div>
     </div>
   </div>
 </section>
 
-</div><!-- /glass-wrapper -->
-
-<footer class="footer-note">
-  <a href="https://www.instagram.com/dora_dondurma/" target="_blank" rel="noopener">@dora_dondurma</a>
-  · Mimaroba, Büyükçekmece
+<footer class="foot">
+  <a href="https://www.instagram.com/dora_dondurma/" target="_blank" rel="noopener">@dora_dondurma</a> · Mimaroba, Büyükçekmece
 </footer>
 
 <script>
-// ── Scroll reveal ──
-const observer = new IntersectionObserver((entries) => {
-  entries.forEach(entry => {
-    if(entry.isIntersecting){
-      entry.target.classList.add('visible');
-    }
-  });
-}, {threshold:0.15});
+// ── scroll reveal ──
+const obs = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible')});
+},{threshold:0.1});
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
 
-document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
-
-// ── Spoon indicator fade on scroll ──
-const spoon = document.querySelector('.spoon-indicator');
-let spoonTimer;
-window.addEventListener('scroll',()=>{
-  spoon.style.opacity='0.5';
-  clearTimeout(spoonTimer);
-  spoonTimer = setTimeout(()=>{
-    if(window.scrollY < 100) spoon.style.opacity='0.5';
-  },2000);
-});
-
-// ── Product card click — subtle pop ──
-document.querySelectorAll('.product-card').forEach(card => {
-  card.addEventListener('click', function(){
-    this.style.transform = 'scale(0.97)';
-    setTimeout(()=>{this.style.transform=''},150);
-  });
-});
-
-// ── Glass edge parallax ──
-window.addEventListener('scroll',()=>{
-  const y = window.scrollY;
-  const maxScroll = document.body.scrollHeight - window.innerHeight;
-  const pct = maxScroll > 0 ? y / maxScroll : 0;
-  
-  // Update spoon position
-  const spoonBowl = document.querySelector('.spoon-bowl');
-  if(spoonBowl){
-    const pos = 50 - (pct * 40);
-    spoonBowl.style.transform = `translateY(${pos}px)`;
-  }
-
-  // Update glass edge glow based on scroll
-  const tint = Math.round(30 + pct * 40);
-  document.querySelector('.glass-edge-l').style.opacity = 0.3 + (pct * 0.5);
-  document.querySelector('.glass-edge-r').style.opacity = 0.3 + (pct * 0.5);
-});
-
-// ── Initial check ──
-// Trigger visible for elements already in view
+// ── trigger visible for above-fold ──
 setTimeout(()=>{
-  document.querySelectorAll('.reveal').forEach(el => {
-    const rect = el.getBoundingClientRect();
-    if(rect.top < window.innerHeight - 100) el.classList.add('visible');
+  document.querySelectorAll('.reveal').forEach(el=>{
+    if(el.getBoundingClientRect().top<window.innerHeight)el.classList.add('visible');
   });
-}, 200);
+},150);
+
+// ── card click pop ──
+document.querySelectorAll('.product-card').forEach(c=>{
+  c.addEventListener('click',function(){
+    this.style.transform='scale(0.96)';
+    setTimeout(()=>{this.style.transform=''},120);
+  });
+});
 </script>
 </body>
 </html>
