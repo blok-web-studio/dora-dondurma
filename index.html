@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dora Dondurma & Patisserie — Mimaroba</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,300..700,50..100&family=DM+Sans:opsz,wght@9..40,300..700&display=swap" rel="stylesheet">
+<style>
+/* ========== RESET & ROOT ========== */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --pk:#ff2975;
+  --pk-glow:#ff2975;
+  --pk-dim:#cc2260;
+  --cy:#00e5ff;
+  --cy-glow:#00e5ff;
+  --cy-dim:#00b8cc;
+  --bg:#07070d;
+  --bg2:#0d0d18;
+  --surface:#12121f;
+  --text:#e8e8f0;
+  --text-dim:#8888a0;
+  --glass:hsla(240,20%,8%,0.7);
+  --glass-border:hsla(240,30%,50%,0.15);
+  --font-display:'Fraunces',Georgia,serif;
+  --font-body:'DM Sans',system-ui,sans-serif;
+  --frame:clamp(16px,3vw,32px);
+}
+html{scroll-behavior:smooth;background:var(--bg);color:var(--text);font-family:var(--font-body);-webkit-font-smoothing:antialiased}
+body{overflow-x:hidden}
+
+/* ========== SCROLLBAR ========== */
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--pk-dim);border-radius:3px}
+::-webkit-scrollbar-thumb:hover{background:var(--pk)}
+
+/* ========== UTILITY ========== */
+.neon-pk{color:var(--pk);text-shadow:0 0 20px var(--pk-glow),0 0 60px color-mix(in srgb,var(--pk-glow) 40%,transparent)}
+.neon-cy{color:var(--cy);text-shadow:0 0 20px var(--cy-glow),0 0 60px color-mix(in srgb,var(--cy-glow) 40%,transparent)}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+
+/* ========== NEON FLICKER ========== */
+@keyframes flicker{
+  0%,19%,21%,23%,25%,54%,56%,100%{opacity:1}
+  20%,24%,55%{opacity:0.4}
+}
+@keyframes flicker-soft{
+  0%,40%,42%,44%,46%,70%,72%,100%{opacity:1}
+  41%,45%,71%{opacity:0.6}
+}
+.flicker{animation:flicker 4s infinite}
+.flicker-soft{animation:flicker-soft 6s infinite}
+
+/* ========== FLOATING ========== */
+@keyframes float{
+  0%,100%{transform:translateY(0)}
+  50%{transform:translateY(-8px)}
+}
+.float{animation:float 4s ease-in-out infinite}
+.float-delay{animation:float 5s ease-in-out 1s infinite}
+
+/* ========== SCROLL REVEAL ========== */
+.reveal{opacity:0;transform:translateY(40px);transition:opacity 0.8s cubic-bezier(0.16,1,0.3,1),transform 0.8s cubic-bezier(0.16,1,0.3,1)}
+.reveal.visible{opacity:1;transform:translateY(0)}
+
+/* ========== GLASS PANE ========== */
+.glass{
+  background:var(--glass);
+  backdrop-filter:blur(16px) saturate(1.2);
+  -webkit-backdrop-filter:blur(16px) saturate(1.2);
+  border:1px solid var(--glass-border);
+  border-radius:16px;
+}
+.glass-pane{
+  position:absolute;inset:0;
+  background:linear-gradient(135deg,
+    hsla(330,100%,50%,0.03) 0%,
+    transparent 40%,
+    transparent 60%,
+    hsla(190,100%,50%,0.03) 100%
+  );
+  pointer-events:none;
+}
+
+/* ========== SHOP WINDOW FRAME ========== */
+.window{
+  position:relative;
+  min-height:100vh;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:var(--frame);
+  overflow:hidden;
+}
+.window::before{
+  content:'';
+  position:absolute;inset:0;
+  border:clamp(8px,2vw,20px) solid hsla(0,0%,5%,0.9);
+  box-shadow:inset 0 0 0 1px hsla(0,0%,20%,0.3);
+  z-index:2;
+  pointer-events:none;
+}
+.window::after{
+  content:'';
+  position:absolute;inset:0;
+  background:
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent calc(50vh - 1px),
+      hsla(0,0%,100%,0.015) calc(50vh - 1px),
+      hsla(0,0%,100%,0.015) 50vh
+    );
+  pointer-events:none;
+  z-index:1;
+}
+.window-inner{
+  position:relative;
+  z-index:3;
+  width:100%;
+  max-width:1200px;
+  display:flex;flex-direction:column;align-items:center;
+}
+
+/* ========== WINDOW TRIMS (neon borders) ========== */
+.window-pk .window-inner{border:1px solid hsla(330,100%,60%,0.1);padding:clamp(16px,4vw,48px);border-radius:24px}
+.window-cy .window-inner{border:1px solid hsla(190,100%,50%,0.1);padding:clamp(16px,4vw,48px);border-radius:24px}
+
+/* ========== HERO ========== */
+.hero-window{
+  min-height:100vh;
+  background:radial-gradient(ellipse at 50% 30%, hsl(240,15%,8%) 0%, var(--bg) 70%);
+}
+.hero-neon-sign{
+  font-family:var(--font-display);
+  font-size:clamp(3.5rem,12vw,8rem);
+  font-weight:700;
+  font-variation-settings:"SOFT" 100;
+  letter-spacing:-0.03em;
+  line-height:1;
+  text-align:center;
+  color:var(--pk);
+  text-shadow:
+    0 0 30px var(--pk-glow),
+    0 0 60px color-mix(in srgb,var(--pk-glow) 60%,transparent),
+    0 0 120px color-mix(in srgb,var(--pk-glow) 30%,transparent);
+}
+.hero-neon-sign .cy{color:var(--cy);text-shadow:0 0 30px var(--cy-glow),0 0 60px color-mix(in srgb,var(--cy-glow) 60%,transparent),0 0 120px color-mix(in srgb,var(--cy-glow) 30%,transparent)}
+.hero-logo{
+  width:clamp(80px,15vw,140px);height:clamp(80px,15vw,140px);
+  border-radius:50%;
+  border:3px solid var(--pk);
+  display:flex;align-items:center;justify-content:center;
+  margin-bottom:clamp(12px,3vh,32px);
+  box-shadow:0 0 30px color-mix(in srgb,var(--pk-glow) 40%,transparent),0 0 60px color-mix(in srgb,var(--pk-glow) 20%,transparent);
+  position:relative;
+}
+.hero-logo svg{width:60%;height:60%}
+.hero-sub{
+  font-size:clamp(0.9rem,2vw,1.4rem);
+  color:var(--text-dim);
+  letter-spacing:0.15em;
+  text-transform:uppercase;
+  margin-top:clamp(8px,2vh,20px);
+}
+.hero-hours{
+  font-size:clamp(0.75rem,1.2vw,1rem);
+  color:var(--cy);
+  text-shadow:0 0 10px var(--cy-glow);
+  margin-top:clamp(16px,3vh,32px);
+  letter-spacing:0.1em;
+}
+.hero-reflection{
+  position:absolute;inset:0;
+  background:linear-gradient(180deg,
+    hsla(330,100%,50%,0.04) 0%,
+    transparent 30%,
+    transparent 70%,
+    hsla(190,100%,50%,0.04) 100%
+  );
+  pointer-events:none;
+  z-index:1;
+}
+.scroll-indicator{
+  position:absolute;bottom:clamp(20px,4vh,48px);
+  display:flex;flex-direction:column;align-items:center;gap:8px;
+  color:var(--text-dim);font-size:0.75rem;letter-spacing:0.1em;
+  z-index:4;
+  animation:breathe 2s ease-in-out infinite;
+}
+@keyframes breathe{
+  0%,100%{opacity:0.4}
+  50%{opacity:1}
+}
+.scroll-indicator .arrow{width:20px;height:20px;border-right:2px solid var(--pk);border-bottom:2px solid var(--pk);transform:rotate(45deg);opacity:0.6}
+
+/* ========== DISPLAY SECTIONS ========== */
+.display-section{
+  position:relative;
+  min-height:100vh;
+  padding:clamp(40px,6vh,80px) var(--frame);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+}
+.display-section::before{
+  content:'';
+  position:absolute;inset:0;
+  border:clamp(8px,2vw,20px) solid hsla(0,0%,5%,0.9);
+  box-shadow:inset 0 0 0 1px hsla(0,0%,20%,0.3);
+  z-index:1;
+  pointer-events:none;
+}
+.display-bg{
+  position:absolute;inset:0;
+  z-index:0;
+  pointer-events:none;
+}
+.display-bg-pk{
+  background:radial-gradient(ellipse at 50% 50%, hsla(330,100%,50%,0.04) 0%, transparent 70%);
+}
+.display-bg-cy{
+  background:radial-gradient(ellipse at 50% 50%, hsla(190,100%,50%,0.04) 0%, transparent 70%);
+}
+.display-inner{position:relative;z-index:2;width:100%;max-width:1200px}
+.display-label{
+  font-family:var(--font-display);
+  font-size:clamp(2rem,5vw,3.5rem);
+  font-weight:600;
+  font-variation-settings:"SOFT" 100;
+  text-align:center;
+  margin-bottom:clamp(24px,4vh,48px);
+  letter-spacing:0.05em;
+}
+.display-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+  gap:clamp(16px,2.5vw,32px);
+}
+
+/* ========== PRODUCT CARD ========== */
+.product-card{
+  background:var(--surface);
+  border-radius:16px;
+  overflow:hidden;
+  border:1px solid var(--glass-border);
+  transition:transform 0.4s cubic-bezier(0.16,1,0.3,1),box-shadow 0.4s ease;
+  position:relative;
+}
+.product-card:hover{transform:translateY(-4px)}
+.product-card-pk:hover{box-shadow:0 8px 40px color-mix(in srgb,var(--pk-glow) 20%,transparent)}
+.product-card-cy:hover{box-shadow:0 8px 40px color-mix(in srgb,var(--cy-glow) 20%,transparent)}
+.product-card .card-img{
+  width:100%;aspect-ratio:4/3;object-fit:cover;
+  display:block;
+  border-bottom:1px solid var(--glass-border);
+}
+.product-card .card-body{padding:clamp(12px,2vw,20px)}
+.product-card .card-title{
+  font-family:var(--font-display);
+  font-size:clamp(1rem,1.5vw,1.2rem);
+  font-weight:600;
+  font-variation-settings:"SOFT" 80;
+  margin-bottom:4px;
+}
+.product-card .card-desc{
+  font-size:0.85rem;color:var(--text-dim);line-height:1.5;
+}
+.product-card .card-badge{
+  display:inline-block;
+  padding:2px 10px;
+  border-radius:100px;
+  font-size:0.7rem;
+  font-weight:600;
+  letter-spacing:0.05em;
+  text-transform:uppercase;
+  margin-top:8px;
+}
+.badge-pk{background:color-mix(in srgb,var(--pk) 20%,transparent);color:var(--pk)}
+.badge-cy{background:color-mix(in srgb,var(--cy) 20%,transparent);color:var(--cy)}
+
+.product-card .card-glow{
+  position:absolute;top:0;left:0;right:0;height:2px;
+}
+.product-card-pk .card-glow{background:linear-gradient(90deg,transparent,var(--pk),transparent)}
+.product-card-cy .card-glow{background:linear-gradient(90deg,transparent,var(--cy),transparent)}
+
+/* ========== INFO SECTION ========== */
+.info-section{
+  position:relative;
+  min-height:80vh;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:clamp(40px,6vh,80px) var(--frame);
+}
+.info-card{
+  max-width:560px;
+  width:100%;
+  padding:clamp(32px,5vw,48px);
+  text-align:center;
+  position:relative;
+  overflow:hidden;
+  border:1px solid hsla(330,100%,60%,0.15);
+}
+.info-card::before{
+  content:'';
+  position:absolute;inset:0;
+  background:linear-gradient(135deg,hsla(330,100%,50%,0.05) 0%,transparent 50%,hsla(190,100%,50%,0.05) 100%);
+  pointer-events:none;
+}
+.info-card .info-icon{
+  width:48px;height:48px;
+  margin:0 auto 16px;
+  border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.2rem;
+}
+.info-icon-pk{background:color-mix(in srgb,var(--pk) 20%,transparent);color:var(--pk)}
+.info-icon-cy{background:color-mix(in srgb,var(--cy) 20%,transparent);color:var(--cy)}
+.info-card .info-label{
+  font-family:var(--font-display);
+  font-size:1.5rem;font-weight:600;font-variation-settings:"SOFT" 80;
+  margin-bottom:16px;
+}
+.info-card .info-row{
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  padding:8px 0;
+  font-size:0.95rem;color:var(--text-dim);
+  line-height:1.6;
+}
+.info-card .info-row strong{color:var(--text);font-weight:600}
+.info-card .info-divider{
+  width:60px;height:1px;
+  margin:12px auto;
+  background:linear-gradient(90deg,transparent,var(--pk),transparent);
+}
+.info-card .info-cy-divider{
+  background:linear-gradient(90deg,transparent,var(--cy),transparent);
+}
+.info-btn{
+  display:inline-block;
+  margin-top:20px;
+  padding:14px 32px;
+  border-radius:100px;
+  font-family:var(--font-body);
+  font-size:0.9rem;
+  font-weight:600;
+  text-decoration:none;
+  letter-spacing:0.02em;
+  transition:all 0.3s ease;
+  border:none;cursor:pointer;
+}
+.btn-pk{
+  background:var(--pk);
+  color:#fff;
+  box-shadow:0 0 20px color-mix(in srgb,var(--pk-glow) 30%,transparent);
+}
+.btn-pk:hover{
+  background:color-mix(in srgb,var(--pk) 80%,white);
+  box-shadow:0 0 40px color-mix(in srgb,var(--pk-glow) 50%,transparent);
+  transform:translateY(-2px);
+}
+.btn-cy{
+  background:var(--cy);color:#000;
+  box-shadow:0 0 20px color-mix(in srgb,var(--cy-glow) 30%,transparent);
+}
+.btn-cy:hover{
+  background:color-mix(in srgb,var(--cy) 80%,white);
+  box-shadow:0 0 40px color-mix(in srgb,var(--cy-glow) 50%,transparent);
+  transform:translateY(-2px);
+}
+
+/* ========== FOOTER ========== */
+.footer{
+  padding:clamp(20px,3vh,40px) var(--frame);
+  text-align:center;
+  border-top:1px solid hsla(240,30%,50%,0.08);
+}
+.footer-inner{
+  max-width:1200px;margin:0 auto;
+  display:flex;flex-direction:column;align-items:center;gap:12px;
+}
+.footer .social-link{
+  color:var(--text-dim);
+  text-decoration:none;
+  font-size:0.85rem;
+  transition:color 0.3s;
+  display:flex;align-items:center;gap:6px;
+}
+.footer .social-link:hover{color:var(--pk)}
+.footer .copyright{
+  font-size:0.75rem;color:var(--text-dim);opacity:0.6;
+}
+
+/* ========== STREET LAMP EFFECT ========== */
+.lamp{
+  position:absolute;top:0;
+  width:4px;height:30vh;
+  background:linear-gradient(to bottom, var(--pk), transparent);
+  opacity:0.15;
+  pointer-events:none;
+}
+.lamp-left{left:10%}
+.lamp-right{right:10%}
+.lamp-cy{background:linear-gradient(to bottom, var(--cy), transparent)}
+
+/* ========== RESPONSIVE ========== */
+@media(max-width:640px){
+  .display-grid{grid-template-columns:1fr}
+  .hero-neon-sign{font-size:clamp(2.5rem,15vw,4rem)}
+}
+@media(min-width:641px)and(max-width:900px){
+  .display-grid{grid-template-columns:repeat(2,1fr)}
+}
+</style>
+</head>
+<body>
+
+<!-- ===== HERO: The Neon Storefront ===== -->
+<section class="window hero-window">
+  <div class="hero-reflection"></div>
+  <div class="lamp lamp-left"></div>
+  <div class="lamp lamp-right lamp-cy"></div>
+
+  <div class="window-inner" style="text-align:center">
+    <!-- Logo -->
+    <div class="hero-logo flicker-soft">
+      <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- three cones -->
+        <g transform="translate(50,55)">
+          <!-- left cone -->
+          <path d="M-22,5 L-12,-25 L-2,5" stroke="var(--pk)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+          <ellipse cx="-12" cy="-25" rx="6" ry="5" stroke="var(--pk)" stroke-width="2" fill="none"/>
+          <!-- middle cone -->
+          <path d="M-10,8 L0,-22 L10,8" stroke="var(--cy)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+          <ellipse cx="0" cy="-22" rx="6" ry="5" stroke="var(--cy)" stroke-width="2" fill="none"/>
+          <!-- right cone -->
+          <path d="M2,5 L12,-25 L22,5" stroke="var(--pk)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+          <ellipse cx="12" cy="-25" rx="6" ry="5" stroke="var(--pk)" stroke-width="2" fill="none"/>
+        </g>
+        <!-- dots (sprinkles) -->
+        <circle cx="30" cy="25" r="2" fill="var(--pk)" opacity="0.6"/>
+        <circle cx="55" cy="18" r="2" fill="var(--cy)" opacity="0.6"/>
+        <circle cx="70" cy="35" r="2" fill="var(--pk)" opacity="0.6"/>
+        <circle cx="25" cy="45" r="1.5" fill="var(--cy)" opacity="0.5"/>
+        <circle cx="75" cy="50" r="1.5" fill="var(--pk)" opacity="0.5"/>
+      </svg>
+    </div>
+
+    <!-- Neon sign -->
+    <h1 class="hero-neon-sign flicker">
+      D<span class="cy">O</span>R<span class="cy">A</span>
+    </h1>
+
+    <p class="hero-sub flicker-soft">Dondurma & Patisserie</p>
+    <p class="hero-hours">Her gün 13:00 — 02:00</p>
+  </div>
+
+  <div class="scroll-indicator">
+    <span>Vitrini keşfet</span>
+    <div class="arrow"></div>
+  </div>
+</section>
+
+<!-- ===== DISPLAY 1: Ice Cream ===== -->
+<section class="display-section" id="dondurma">
+  <div class="display-bg display-bg-pk"></div>
+  <div class="lamp lamp-left"></div>
+  <div class="lamp lamp-right lamp-cy"></div>
+
+  <div class="display-inner">
+    <h2 class="display-label neon-pk reveal">Dondurma</h2>
+    <div class="display-grid">
+      <!-- Card 1 -->
+      <div class="product-card product-card-pk reveal">
+        <div class="card-glow"></div>
+        <img class="card-img" src="https://images.unsplash.com/photo-1563805042-7684c019e1cb?w=600&q=80" alt="Çilekli Külah" loading="lazy">
+        <div class="card-body">
+          <h3 class="card-title">Çilekli Külah</h3>
+          <p class="card-desc">Taze çilek parçalarıyla hazırlanan özel yaz lezzeti</p>
+          <span class="card-badge badge-pk">Soğuk</span>
+        </div>
+      </div>
+      <!-- Card 2 -->
+      <div class="product-card product-card-pk reveal" style="transition-delay:0.1s">
+        <div class="card-glow"></div>
+        <img class="card-img" src="https://images.unsplash.com/photo-1511919886926-f2d91c0a4a9e?w=600&q=80" alt="Antep Fıstıklı" loading="lazy">
+        <div class="card-body">
+          <h3 class="card-title">Antep Fıstıklı</h3>
+          <p class="card-desc">Gerçek Antep fıstığıyla yapılan kremamsı dondurma</p>
+          <span class="card-badge badge-pk">Klasik</span>
+        </div>
+      </div>
+      <!-- Card 3 -->
+      <div class="product-card product-card-pk reveal" style="transition-delay:0.2s">
+        <div class="card-glow"></div>
+        <img class="card-img" src="https://images.unsplash.com/photo-1572490122747-3968b75cc699?w=600&q=80" alt="Magnolya" loading="lazy">
+        <div class="card-body">
+          <h3 class="card-title">Magnolya</h3>
+          <p class="card-desc">Kat kat dondurma, sos ve meyve ile hazırlanan özel tatlı</p>
+          <span class="card-badge badge-pk">Özel</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== DISPLAY 2: Cakes & Pastry ===== -->
+<section class="display-section" id="pasta">
+  <div class="display-bg display-bg-cy"></div>
+  <div class="lamp lamp-left lamp-cy"></div>
+  <div class="lamp lamp-right"></div>
+
+  <div class="display-inner">
+    <h2 class="display-label neon-cy reveal">Pastane</h2>
+    <div class="display-grid">
+      <div class="product-card product-card-cy reveal">
+        <div class="card-glow"></div>
+        <img class="card-img" src="https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=600&q=80" alt="Çikolatalı Pasta" loading="lazy">
+        <div class="card-body">
+          <h3 class="card-title">Çikolatalı Pasta</h3>
+          <p class="card-desc">Belçika çikolatası ile hazırlanan katlı pasta</p>
+          <span class="card-badge badge-cy">Pasta</span>
+        </div>
+      </div>
+      <div class="product-card product-card-cy reveal" style="transition-delay:0.1s">
+        <div class="card-glow"></div>
+        <img class="card-img" src="https://images.unsplash.com/photo-1558301211-0d8c8ddee6ec?w=600&q=80" alt="Çilekli Cheesecake" loading="lazy">
+        <div class="card-body">
+          <h3 class="card-title">Çilekli Cheesecake</h3>
+          <p class="card-desc">New York usulü cheesecake, taze çilek sosuyla</p>
+          <span class="card-badge badge-cy">Pasta</span>
+        </div>
+      </div>
+      <div class="product-card product-card-cy reveal" style="transition-delay:0.2s">
+        <div class="card-glow"></div>
+        <img class="card-img" src="https://images.unsplash.com/photo-1488477181946-6428a0291777?w=600&q=80" alt="Kup" loading="lazy">
+        <div class="card-body">
+          <h3 class="card-title">Özel Kup</h3>
+          <p class="card-desc">Dondurma, meyve ve sosların muhteşem uyumu</p>
+          <span class="card-badge badge-cy">Tatlı</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== DISPLAY 3: Drinks ===== -->
+<section class="display-section" id="icecek">
+  <div class="display-bg display-bg-pk"></div>
+  <div class="lamp lamp-left"></div>
+  <div class="lamp lamp-right lamp-cy"></div>
+
+  <div class="display-inner">
+    <h2 class="display-label neon-pk reveal">İçecekler</h2>
+    <div class="display-grid">
+      <div class="product-card product-card-pk reveal">
+        <div class="card-glow"></div>
+        <img class="card-img" src="https://images.unsplash.com/photo-1527661591475-527312dd65f5?w=600&q=80" alt="Çilekli Milkshake" loading="lazy">
+        <div class="card-body">
+          <h3 class="card-title">Çilekli Milkshake</h3>
+          <p class="card-desc">Soğuk süt ve taze çilekle hazırlanan klasik</p>
+          <span class="card-badge badge-pk">Soğuk</span>
+        </div>
+      </div>
+      <div class="product-card product-card-pk reveal" style="transition-delay:0.1s">
+        <div class="card-glow"></div>
+        <img class="card-img" src="https://images.unsplash.com/photo-1579954115323-c9380c717131?w=600&q=80" alt="Mango Smoothie" loading="lazy">
+        <div class="card-body">
+          <h3 class="card-title">Mango Smoothie</h3>
+          <p class="card-desc">Taze mango ve yoğurt ile tropikal lezzet</p>
+          <span class="card-badge badge-pk">Soğuk</span>
+        </div>
+      </div>
+      <div class="product-card product-card-pk reveal" style="transition-delay:0.2s">
+        <div class="card-glow"></div>
+        <img class="card-img" src="https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=600&q=80" alt="Soğuk Kahve" loading="lazy">
+        <div class="card-body">
+          <h3 class="card-title">Soğuk Kahve</h3>
+          <p class="card-desc">Özel karışım soğuk demleme kahve, dondurma ile servis</p>
+          <span class="card-badge badge-pk">Kahve</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== DISPLAY 4: Waffles ===== -->
+<section class="display-section" id="waffle">
+  <div class="display-bg display-bg-cy"></div>
+  <div class="lamp lamp-left lamp-cy"></div>
+  <div class="lamp lamp-right"></div>
+
+  <div class="display-inner">
+    <h2 class="display-label neon-cy reveal">Waffle</h2>
+    <div class="display-grid">
+      <div class="product-card product-card-cy reveal">
+        <div class="card-glow"></div>
+        <img class="card-img" src="https://images.unsplash.com/photo-1562376552-0d160a2f238d?w=600&q=80" alt="Karışık Waffle" loading="lazy">
+        <div class="card-body">
+          <h3 class="card-title">Karışık Waffle</h3>
+          <p class="card-desc">Mevsim meyveleri, çikolata sosu ve dondurma ile</p>
+          <span class="card-badge badge-cy">Waffle</span>
+        </div>
+      </div>
+      <div class="product-card product-card-cy reveal" style="transition-delay:0.1s">
+        <div class="card-glow"></div>
+        <img class="card-img" src="https://images.unsplash.com/photo-1509365465985-25d11c17e812?w=600&q=80" alt="Nutella Waffle" loading="lazy">
+        <div class="card-body">
+          <h3 class="card-title">Nutella Waffle</h3>
+          <p class="card-desc">Bol Nutella, muz ve fındık parçaları ile</p>
+          <span class="card-badge badge-cy">Waffle</span>
+        </div>
+      </div>
+      <div class="product-card product-card-cy reveal" style="transition-delay:0.2s">
+        <div class="card-glow"></div>
+        <img class="card-img" src="https://images.unsplash.com/photo-1559715745-e1b33ab271c8?w=600&q=80" alt="Dondurmalı Waffle" loading="lazy">
+        <div class="card-body">
+          <h3 class="card-title">Dondurmalı Waffle</h3>
+          <p class="card-desc">Sıcak waffle üzerinde iki top dondurma</p>
+          <span class="card-badge badge-cy">Waffle</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== INFO ===== -->
+<section class="info-section" id="iletisim">
+  <div class="display-bg" style="background:radial-gradient(ellipse at 50% 50%, color-mix(in srgb,var(--pk) 3%,transparent) 0%, transparent 60%)"></div>
+  <div class="lamp lamp-left"></div>
+  <div class="lamp lamp-right lamp-cy"></div>
+
+  <div class="info-card glass reveal" style="text-align:center">
+    <div class="info-icon info-icon-pk" style="margin:0 auto 16px">✦</div>
+    <h2 class="info-label" style="text-align:center">Dora Dondurma & Patisserie</h2>
+
+    <div class="info-row" style="justify-content:center">
+      <span>📌</span>
+      <span>Ekinoba Mah. Hürriyet Cad. No.41/2d<br>Mimaroba, Büyükçekmece/İstanbul</span>
+    </div>
+
+    <div class="info-divider"></div>
+
+    <div class="info-row" style="justify-content:center">
+      <span>🕐</span>
+      <span><strong>Açık:</strong> Her gün 13:00 — 02:00</span>
+    </div>
+
+    <div class="info-divider info-cy-divider"></div>
+
+    <div class="info-row" style="justify-content:center">
+      <span>📞</span>
+      <span><a href="tel:+905334600305" style="color:var(--text);text-decoration:none">0533 460 03 05</a></span>
+    </div>
+
+    <div style="display:flex;gap:12px;justify-content:center;margin-top:24px;flex-wrap:wrap">
+      <a href="https://maps.app.goo.gl/zbYJJw6AQ8FRUeo96" class="info-btn btn-pk" target="_blank" rel="noopener">Yol Tarifi Al</a>
+      <a href="tel:+905334600305" class="info-btn btn-cy" style="background:transparent;border:1px solid var(--cy);color:var(--cy);box-shadow:none">Bizi Ara</a>
+    </div>
+
+    <div style="margin-top:20px;display:flex;justify-content:center;gap:8px;flex-wrap:wrap;font-size:0.8rem;color:var(--text-dim)">
+      <span>📸</span>
+      <a href="https://instagram.com/dora_dondurma" target="_blank" rel="noopener" style="color:var(--pk);text-decoration:none">@dora_dondurma</a>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<footer class="footer">
+  <div class="footer-inner">
+    <a href="https://instagram.com/dora_dondurma" class="social-link" target="_blank" rel="noopener">
+      📸 @dora_dondurma
+    </a>
+    <p class="copyright">
+      Dora Dondurma &copy; · Mimaroba, Büyükçekmece
+    </p>
+  </div>
+</footer>
+
+<script>
+// Clean scroll-reveal observer
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+    }
+  });
+}, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+
+// Observe all .reveal elements
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+// Product card entrance stagger: already handled via CSS transition-delay
+// Neon flicker is CSS-only
+
+// Window reflection parallax (subtle)
+document.addEventListener('scroll', () => {
+  const scrollY = window.scrollY;
+  document.querySelectorAll('.window, .display-section').forEach(section => {
+    const rect = section.getBoundingClientRect();
+    const center = rect.top + rect.height / 2;
+    const viewCenter = window.innerHeight / 2;
+    const dist = (center - viewCenter) / window.innerHeight;
+    const pane = section.querySelector('.hero-reflection, .display-bg');
+    if (pane) {
+      pane.style.opacity = 1 - Math.abs(dist) * 0.5;
+    }
+  });
+});
+</script>
+</body>
+</html>
