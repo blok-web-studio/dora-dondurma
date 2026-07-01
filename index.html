@@ -8,243 +8,776 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300..800;1,9..40,300..800&family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css" />
-  <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/fill/style.css" />
-  <link rel="stylesheet" href="styles.css" />
+  <meta name="theme-color" content="#ff2975">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='15' fill='%23ff2975'/%3E%3Cpath d='M10 20 Q16 8 22 20' fill='none' stroke='white' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E">
+  <style>
+    /* ── reset ── */
+    *, *::before, *::after { box-sizing: border-box; }
+    html { -webkit-text-size-adjust: 100%; }
+    body {
+      margin: 0;
+      font-family: 'DM Sans', system-ui, sans-serif;
+      font-size: 17px;
+      line-height: 1.58;
+      color: #2d2a24;
+      text-rendering: optimizeLegibility;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+    ::selection { background: #ff297520; color: #2d2a24; }
+    a { color: inherit; text-decoration: none; }
+    p { text-wrap: pretty; }
+    h1, h2, h3, h4 { text-wrap: balance; }
+
+    /* ── ════════════════════════════════════════════ ── */
+    /* ──  HERO                                         ── */
+    /* ── ════════════════════════════════════════════ ── */
+    .hero {
+      position: relative;
+      z-index: 2;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      background: linear-gradient(180deg, #f2f6ff 0%, #f7f2e9 100%);
+      overflow: hidden;
+      padding: 0 28px;
+    }
+    .hero-inner {
+      max-width: 1180px;
+      margin: 0 auto;
+      width: 100%;
+    }
+    .hero-wordmark {
+      font-family: 'Fraunces', Georgia, serif;
+      font-size: clamp(72px, 14vw, 160px);
+      font-weight: 500;
+      line-height: 0.88;
+      letter-spacing: -0.05em;
+      font-variation-settings: 'SOFT' 60;
+      color: #ff2975;
+      margin: 0;
+      position: relative;
+      display: inline-block;
+    }
+    .hero-wordmark::after {
+      content: '';
+      position: absolute;
+      bottom: 6px;
+      left: 2%;
+      width: 96%;
+      height: 8px;
+      background: #ff2975;
+      opacity: 0.18;
+      border-radius: 4px;
+      transform: rotate(-0.8deg);
+    }
+    .hero-tagline {
+      font-family: 'Fraunces', Georgia, serif;
+      font-size: clamp(20px, 2.8vw, 32px);
+      font-weight: 400;
+      font-style: italic;
+      font-variation-settings: 'SOFT' 85;
+      color: #6e675b;
+      line-height: 1.2;
+      max-width: 24ch;
+      margin: 16px 0 20px;
+    }
+    .hero-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      font-size: 15px;
+      color: #8a7e72;
+    }
+    .hero-meta span {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .hero-meta i { font-size: 17px; color: #ff2975; }
+
+    /* ── scroll-down indicator ── */
+    .scroll-indicator {
+      position: absolute;
+      bottom: 32px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      color: #b0a89e;
+      font-size: 11px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      animation: scrollBounce 2.4s ease-in-out infinite;
+    }
+    @keyframes scrollBounce {
+      0%, 100% { transform: translateX(-50%) translateY(0); }
+      50% { transform: translateX(-50%) translateY(8px); }
+    }
+    .scroll-indicator i {
+      font-size: 16px;
+      color: #ff2975;
+    }
+
+    /* ── frost particles hero ── */
+    .hero-frost {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+      z-index: 0;
+    }
+    .pf {
+      position: absolute;
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: #b8d4ff;
+      opacity: 0.15;
+    }
+
+    /* ── ════════════════════════════════════════════ ── */
+    /* ──  HORIZONTAL SCROLL                             ── */
+    /* ── ════════════════════════════════════════════ ── */
+
+    .h-wrap {
+      position: relative;
+      z-index: 1;
+    }
+    /* spacer div to create scroll room: injected by JS */
+    .h-spacer {
+      pointer-events: none;
+    }
+    .h-sticky {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow: hidden;
+    }
+    .h-track {
+      display: flex;
+      height: 100vh;
+      will-change: transform;
+    }
+    .h-panel {
+      flex: 0 0 100vw;
+      height: 100vh;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    /* panel backgrounds — cold → warm gradient across panels */
+    .h-panel:nth-child(1) { background: #f2f6ff; }
+    .h-panel:nth-child(2) { background: #f4f3f5; }
+    .h-panel:nth-child(3) { background: #f7f0ef; }
+    .h-panel:nth-child(4) { background: #f9edea; }
+    .h-panel:nth-child(5) { background: #fbeae6; }
+    .h-panel:nth-child(6) { background: #fde8e3; }
+
+    /* ── drop-in product ── */
+    .product-drop {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      transform: translateY(-120%);
+      opacity: 0;
+      transition: transform 0.7s cubic-bezier(0.22, 0.9, 0.35, 1.15),
+                  opacity 0.4s ease;
+      will-change: transform, opacity;
+    }
+    .h-panel.active .product-drop {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    /* ── cone shape ── */
+    .cone {
+      width: 0;
+      height: 0;
+      border-left: 48px solid transparent;
+      border-right: 48px solid transparent;
+      border-top: 90px solid #d4a868;
+      filter: drop-shadow(0 4px 12px #d4a86844);
+      transition: filter 0.3s;
+    }
+    .cone.small {
+      border-left-width: 32px;
+      border-right-width: 32px;
+      border-top-width: 60px;
+    }
+    .cone:hover {
+      filter: drop-shadow(0 6px 18px #d4a86866);
+    }
+
+    /* ── scoop ── */
+    .scoop {
+      width: 96px;
+      height: 88px;
+      border-radius: 50% 50% 45% 45%;
+      display: grid;
+      place-items: center;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.55);
+      transition: transform 0.25s ease-out;
+      will-change: transform;
+    }
+    .scoop:hover {
+      transform: scale(1.06);
+    }
+    .scoop:active {
+      transform: scale(0.97);
+    }
+    .scoop.pink {
+      background: linear-gradient(135deg, #ff2975 20%, #ff6b9d 100%);
+      box-shadow: 0 6px 24px #ff297544;
+    }
+    .scoop.cream {
+      background: linear-gradient(135deg, #ffe8d6 20%, #fff5f0 100%);
+      color: #8a7e72;
+      box-shadow: 0 6px 24px #ffe8d644;
+    }
+    .scoop.green {
+      background: linear-gradient(135deg, #6bb87c 20%, #8fd49e 100%);
+      box-shadow: 0 6px 24px #6bb87c44;
+    }
+    .scoop.blue {
+      background: linear-gradient(135deg, #7eb8e0 20%, #a8d4f0 100%);
+      box-shadow: 0 6px 24px #7eb8e044;
+    }
+    .scoop.gold {
+      background: linear-gradient(135deg, #e8a040 20%, #f5c06a 100%);
+      box-shadow: 0 6px 24px #e8a04044;
+    }
+    .scoop.choco {
+      background: linear-gradient(135deg, #5a3e2e 20%, #8c6e5a 100%);
+      box-shadow: 0 6px 24px #5a3e2e44;
+    }
+
+    /* ── product info beside cone ── */
+    .product-fig {
+      display: flex;
+      align-items: center;
+      gap: 40px;
+    }
+    .product-info {
+      max-width: 240px;
+    }
+    .product-info h3 {
+      font-family: 'Fraunces', Georgia, serif;
+      font-weight: 500;
+      font-size: 28px;
+      font-variation-settings: 'SOFT' 70;
+      line-height: 1.1;
+      margin: 0 0 4px;
+    }
+    .product-info p {
+      font-size: 14px;
+      color: #6e675b;
+      margin: 0;
+      line-height: 1.4;
+    }
+
+    /* ── step counter ── */
+    .step-counter {
+      position: absolute;
+      bottom: 28px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+    .step-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: #d5cdc5;
+      transition: background 0.3s, transform 0.3s;
+    }
+    .step-dot.active {
+      background: #ff2975;
+      transform: scale(1.3);
+    }
+    .step-label {
+      font-size: 11px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #b0a89e;
+      margin-left: 10px;
+    }
+
+    /* ── ════════════════════════════════════════════ ── */
+    /* ──  CONTACT  (vertical, normal)                    ── */
+    /* ── ════════════════════════════════════════════ ── */
+
+    .contact {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 80px 28px;
+      background: linear-gradient(180deg, #fde8e3 0%, #f7f2e9 100%);
+      text-align: center;
+    }
+    .contact-card {
+      max-width: 480px;
+      margin: 0 auto;
+    }
+    .contact-card h2 {
+      font-family: 'Fraunces', Georgia, serif;
+      font-size: clamp(32px, 5vw, 48px);
+      font-weight: 500;
+      font-variation-settings: 'SOFT' 80;
+      color: #ff2975;
+      margin: 0 0 6px;
+      line-height: 1.1;
+    }
+    .contact-card .sub {
+      font-size: 15px;
+      color: #6e675b;
+      margin: 0 0 40px;
+    }
+    .contact-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-size: 15px;
+      color: #2d2a24;
+      margin-bottom: 12px;
+    }
+    .contact-row i { color: #ff2975; font-size: 18px; }
+    .contact-insta {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 28px;
+      font-size: 15px;
+      font-weight: 500;
+      color: #ff2975;
+      transition: gap 0.2s;
+    }
+    .contact-insta:hover { gap: 10px; }
+
+    /* ── map-ish deco ── */
+    .map-deco {
+      width: 100%;
+      max-width: 480px;
+      height: 200px;
+      margin: 40px auto 0;
+      border-radius: 16px;
+      background:
+        radial-gradient(circle at 30% 40%, #ffd5cc 0%, transparent 40%),
+        radial-gradient(circle at 70% 60%, #b8d4ff 0%, transparent 40%),
+        #f0e9de;
+      position: relative;
+      overflow: hidden;
+      border: 1px solid #ece4dc;
+    }
+    .map-dot {
+      position: absolute;
+      width: 14px; height: 14px;
+      border-radius: 50%;
+      background: #ff2975;
+      left: 46%; top: 48%;
+      box-shadow: 0 0 0 4px #ff297522, 0 0 0 10px #ff297511;
+      animation: mapPulse 2.4s ease-in-out infinite;
+    }
+    @keyframes mapPulse {
+      0%, 100% { box-shadow: 0 0 0 4px #ff297522, 0 0 0 10px #ff297511; }
+      50% { box-shadow: 0 0 0 6px #ff297522, 0 0 0 16px #ff297511; }
+    }
+    .map-label {
+      position: absolute;
+      left: calc(46% + 22px);
+      top: 42%;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: #6e675b;
+      background: #fcf9f4;
+      padding: 3px 10px;
+      border-radius: 20px;
+      border: 1px solid #ece4dc;
+    }
+    .map-street {
+      position: absolute;
+      width: 1px; height: 60px;
+      background: #d5cdc5;
+      left: 60%; top: 30%;
+      transform: rotate(30deg);
+    }
+    .map-street:nth-child(4) {
+      left: 30%; top: 55%;
+      height: 80px;
+      transform: rotate(-20deg);
+    }
+
+    .contact-foot {
+      margin-top: 60px;
+      font-size: 12px;
+      color: #9a9387;
+      letter-spacing: 2px;
+    }
+
+    /* ── ════════════════════════════════════════════ ── */
+    /* ──  RESPONSIVE                                     ── */
+    /* ── ════════════════════════════════════════════ ── */
+
+    @media (max-width: 700px) {
+      .product-fig {
+        flex-direction: column;
+        gap: 20px;
+        text-align: center;
+      }
+      .product-info { text-align: center; }
+      .hero { padding: 0 20px; }
+      .contact { padding: 60px 20px; }
+      .map-deco { height: 160px; }
+    }
+  </style>
 </head>
 <body>
 
-  <!-- ═══ hero (left-aligned split) ═══════════════════ -->
-  <section class="hero" data-od-id="hero">
-    <div class="hero-deco" aria-hidden="true"></div>
-    <div class="container hero-split">
-      <div class="hero-text">
-        <h1 class="hero-wordmark reveal is-visible">Dora</h1>
-        <p class="hero-tagline reveal is-visible reveal-delay-1">
-          Mimaroba'nın tatlı molası
-        </p>
-        <div class="hero-meta reveal is-visible reveal-delay-2">
-          <span><i class="ph ph-map-pin"></i> Mimaroba, Büyükçekmece</span>
-          <span><i class="ph ph-clock"></i> Her gün 09:00 – 23:00</span>
+<!-- ═══════════════════════════════════════════════════ -->
+<!--  HERO                                              -->
+<!-- ═══════════════════════════════════════════════════ -->
+<section class="hero" id="hero">
+  <div class="hero-frost" id="heroFrost"></div>
+  <div class="hero-inner">
+    <h1 class="hero-wordmark">Dora</h1>
+    <p class="hero-tagline">Mimaroba'nın tatlı molası</p>
+    <div class="hero-meta">
+      <span><i class="ph ph-map-pin"></i> Mimaroba, Büyükçekmece</span>
+      <span><i class="ph ph-clock"></i> Her gün 09:00 – 23:00</span>
+    </div>
+  </div>
+  <div class="scroll-indicator">
+    <span>Lezzetleri keşfet</span>
+    <i class="ph ph-caret-double-down"></i>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!--  HORIZONTAL SCROLL                                 -->
+<!-- ═══════════════════════════════════════════════════ -->
+<div class="h-wrap" id="hWrap">
+
+  <!-- spacer injected by JS creates the scroll distance -->
+
+  <div class="h-sticky" id="hSticky">
+    <div class="h-track" id="hTrack">
+
+      <!-- PANEL 1 — Sakızlı Damla -->
+      <div class="h-panel" data-index="0" data-color="cold">
+        <div class="product-drop">
+          <div class="product-fig">
+            <div style="display:flex;flex-direction:column;align-items:center;gap:0">
+              <div class="scoop pink" style="width:108px;height:100px;font-size:12px">Sakızlı</div>
+              <div class="cone"></div>
+            </div>
+            <div class="product-info">
+              <h3>Sakızlı Damla</h3>
+              <p>Sakız aromalı geleneksel dondurma, pürüzsüz kıvam — Osmanlı'dan bugüne.</p>
+            </div>
+          </div>
         </div>
       </div>
-      <div class="hero-game reveal is-visible reveal-delay-2">
-        <div class="flavor-game">
-          <p class="flavor-label">Ne canın çekti?</p>
-          <button class="flavor-btn" id="flavorBtn" aria-label="Günün lezzetini keşfet">
-            <i class="ph ph-shuffle"></i>
-            Günün lezzetini bul
-          </button>
-          <div class="flavor-result" id="flavorResult">
-            <span class="flavor-name">Sakızlı Damla</span>
-            <span class="flavor-category">Dondurma</span>
+
+      <!-- PANEL 2 — Sade Krem -->
+      <div class="h-panel" data-index="1" data-color="cool">
+        <div class="product-drop">
+          <div class="product-fig">
+            <div style="display:flex;flex-direction:column;align-items:center;gap:0">
+              <div class="scoop cream" style="width:108px;height:100px;font-size:12px">Sade</div>
+              <div class="cone"></div>
+            </div>
+            <div class="product-info">
+              <h3>Sade Krem</h3>
+              <p>Doğal kaymak tadı, vanilyalı klasik — her gün taze, her damakta favori.</p>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  </section>
 
-  <!-- ═══ dondurma (2-col cards) ══════════════════════ -->
-  <section class="section" data-od-id="dondurma">
-    <div class="container">
-      <div class="cat-header reveal">
-        <span class="cat-num">01</span>
-        <h2 class="heading-2">Dondurma</h2>
-        <span class="cat-header-line is-pink"></span>
-      </div>
-      <div class="product-grid">
-        <article class="product-card is-pink reveal reveal-delay-1" data-category="dondurma" data-product="Sakızlı Damla">
-          <div class="product-icon is-pink"><i class="ph ph-drop"></i></div>
-          <div class="product-body">
-            <h3 class="product-name">Sakızlı Damla</h3>
-            <p class="product-desc">Sakız aromalı geleneksel dondurma, pürüzsüz kıvam</p>
+      <!-- PANEL 3 — Antep Fıstıklı -->
+      <div class="h-panel" data-index="2" data-color="warm">
+        <div class="product-drop">
+          <div class="product-fig">
+            <div style="display:flex;flex-direction:column;align-items:center;gap:0">
+              <div class="scoop green" style="width:108px;height:100px;font-size:12px">Fıstık</div>
+              <div class="cone"></div>
+            </div>
+            <div class="product-info">
+              <h3>Antep Fıstıklı</h3>
+              <p>Özel kavrulmuş fıstık, yoğun aroma — her kaşıkta Güneydoğu.</p>
+            </div>
           </div>
-        </article>
-        <article class="product-card is-pink reveal reveal-delay-2" data-category="dondurma" data-product="Sade Krem">
-          <div class="product-icon is-pink"><i class="ph ph-flake"></i></div>
-          <div class="product-body">
-            <h3 class="product-name">Sade Krem</h3>
-            <p class="product-desc">Vanilyalı klasik dondurma, her damakta favori</p>
-          </div>
-        </article>
-        <article class="product-card is-pink reveal reveal-delay-3" data-category="dondurma" data-product="Antep Fıstıklı">
-          <div class="product-icon is-pink"><i class="ph ph-seedling"></i></div>
-          <div class="product-body">
-            <h3 class="product-name">Antep Fıstıklı</h3>
-            <p class="product-desc">Bol antep fıstıklı, yoğun lezzet</p>
-          </div>
-        </article>
-        <article class="product-card is-pink reveal reveal-delay-4" data-category="dondurma" data-product="Meyveli Şölen">
-          <div class="product-icon is-pink"><i class="ph ph-strawberry"></i></div>
-          <div class="product-body">
-            <h3 class="product-name">Meyveli Şölen</h3>
-            <p class="product-desc">Mevsim meyveleriyle hazırlanan taze lezzet</p>
-          </div>
-        </article>
-      </div>
-    </div>
-  </section>
-
-  <!-- ═══ pastane (3 cols, bento) ═════════════════════ -->
-  <section class="section section-alt" data-od-id="pastane">
-    <div class="container">
-      <div class="cat-header reveal">
-        <span class="cat-num">02</span>
-        <h2 class="heading-2">Pastane</h2>
-        <span class="cat-header-line is-cyan"></span>
-      </div>
-      <div class="bento-grid">
-        <article class="bento-card is-cyan reveal reveal-delay-1 bento-double" data-category="pastane" data-product="Trileçe">
-          <div class="bento-icon is-cyan"><i class="ph ph-drops"></i></div>
-          <div>
-            <h3 class="product-name">Trileçe</h3>
-            <p class="product-desc">Üç sütlü, karamel soslu, hafif ve nefis</p>
-          </div>
-        </article>
-        <article class="bento-card is-cyan reveal reveal-delay-2" data-category="pastane" data-product="Tiramisu">
-          <div class="bento-icon is-cyan"><i class="ph ph-coffee"></i></div>
-          <div>
-            <h3 class="product-name">Tiramisu</h3>
-            <p class="product-desc">Kahveli, maskarponeli İtalyan klasiği</p>
-          </div>
-        </article>
-        <article class="bento-card is-cyan reveal reveal-delay-3" data-category="pastane" data-product="Baklava">
-          <div class="bento-icon is-cyan"><i class="ph ph-crown"></i></div>
-          <div>
-            <h3 class="product-name">Baklava</h3>
-            <p class="product-desc">İncecik yufkada, antep fıstıklı, geleneksel</p>
-          </div>
-        </article>
-        <article class="bento-card is-cyan reveal reveal-delay-4" data-category="pastane" data-product="Islak Kek">
-          <div class="bento-icon is-cyan"><i class="ph ph-lightning"></i></div>
-          <div>
-            <h3 class="product-name">Islak Kek</h3>
-            <p class="product-desc">Çikolata soslu, yumuşacık, her lokmada mutluluk</p>
-          </div>
-        </article>
-      </div>
-    </div>
-  </section>
-
-  <!-- ═══ içecekler (horizontal scroll strip) ═════════ -->
-  <section class="section" data-od-id="icecekler">
-    <div class="container">
-      <div class="cat-header reveal">
-        <span class="cat-num">03</span>
-        <h2 class="heading-2">İçecekler</h2>
-        <span class="cat-header-line is-pink"></span>
-      </div>
-    </div>
-    <div class="scroll-strip-wrap reveal">
-      <div class="scroll-strip" id="scrollStrip">
-        <article class="strip-card is-pink" data-category="icecekler" data-product="Türk Kahvesi">
-          <div class="strip-icon is-pink"><i class="ph ph-coffee-bean"></i></div>
-          <div>
-            <h3 class="product-name">Türk Kahvesi</h3>
-            <p class="product-desc">Köpüklü, cezvede pişirilir, yanında lokum</p>
-          </div>
-        </article>
-        <article class="strip-card is-pink" data-category="icecekler" data-product="Soğuk Kahve">
-          <div class="strip-icon is-pink"><i class="ph ph-cup"></i></div>
-          <div>
-            <h3 class="product-name">Soğuk Kahve</h3>
-            <p class="product-desc">Soğuk demleme, bol buzlu, ferahlatıcı</p>
-          </div>
-        </article>
-        <article class="strip-card is-pink" data-category="icecekler" data-product="Limonata">
-          <div class="strip-icon is-pink"><i class="ph ph-lemon"></i></div>
-          <div>
-            <h3 class="product-name">Limonata</h3>
-            <p class="product-desc">Taze sıkım, nane yapraklı, buz gibi</p>
-          </div>
-        </article>
-        <article class="strip-card is-pink" data-category="icecekler" data-product="Milkshake">
-          <div class="strip-icon is-pink"><i class="ph ph-blender"></i></div>
-          <div>
-            <h3 class="product-name">Milkshake</h3>
-            <p class="product-desc">Sütlü, dondurmalı, seçtiğin lezzette</p>
-          </div>
-        </article>
-        <article class="strip-card is-pink" data-category="icecekler" data-product="Filtre Kahve">
-          <div class="strip-icon is-pink"><i class="ph ph-drop"></i></div>
-          <div>
-            <h3 class="product-name">Filtre Kahve</h3>
-            <p class="product-desc">Yavaş demleme, günlük çekirdek, sıcak veya soğuk</p>
-          </div>
-        </article>
-      </div>
-    </div>
-    <div class="container">
-      <div class="scroll-hint reveal">
-        <span class="meta"><i class="ph ph-arrow-left"></i> kaydır <i class="ph ph-arrow-right"></i></span>
-      </div>
-    </div>
-  </section>
-
-  <!-- ═══ waffle (3 across) ════════════════════════════ -->
-  <section class="section section-alt" data-od-id="waffle">
-    <div class="container">
-      <div class="cat-header reveal">
-        <span class="cat-num">04</span>
-        <h2 class="heading-2">Waffle</h2>
-        <span class="cat-header-line is-cyan"></span>
-      </div>
-      <div class="trio-grid">
-        <article class="bento-card is-cyan reveal reveal-delay-1" data-category="waffle" data-product="Klasik Waffle">
-          <div class="bento-icon is-cyan"><i class="ph ph-grid-four"></i></div>
-          <div>
-            <h3 class="product-name">Klasik Waffle</h3>
-            <p class="product-desc">Çikolata soslu, mevsim meyveli, çıtır hamur</p>
-          </div>
-        </article>
-        <article class="bento-card is-cyan reveal reveal-delay-2" data-category="waffle" data-product="Orman Meyveli Waffle">
-          <div class="bento-icon is-cyan"><i class="ph ph-flower"></i></div>
-          <div>
-            <h3 class="product-name">Orman Meyveli</h3>
-            <p class="product-desc">Böğürtlen, frambuaz, vişne ile zengin</p>
-          </div>
-        </article>
-        <article class="bento-card is-cyan reveal reveal-delay-3" data-category="waffle" data-product="Karışık Waffle">
-          <div class="bento-icon is-cyan"><i class="ph ph-star"></i></div>
-          <div>
-            <h3 class="product-name">Karışık</h3>
-            <p class="product-desc">Tüm lezzetler bir arada, bol soslu</p>
-          </div>
-        </article>
-      </div>
-    </div>
-  </section>
-
-  <!-- ═══ contact ══════════════════════════════════════ -->
-  <section class="contact" data-od-id="contact">
-    <div class="container">
-      <div class="contact-card reveal">
-        <h2 class="heading-2 cat-title-pink">Bize Ulaşın</h2>
-        <p class="contact-sub">Mimaroba'da sizi bekliyoruz — gelin, bir dondurma da bizden olsun.</p>
-        <div class="contact-row">
-          <i class="ph ph-map-pin"></i>
-          <span>Mimaroba, Büyükçekmece / İstanbul</span>
         </div>
-        <div class="contact-row">
-          <i class="ph ph-clock"></i>
-          <span>Her gün 09:00 – 23:00</span>
-        </div>
-        <div class="contact-divider" aria-hidden="true"></div>
-        <a href="https://www.instagram.com/dora_dondurma/" target="_blank" rel="noopener" class="link-arrow">
-          <i class="ph ph-instagram-logo"></i>
-          @dora_dondurma
-        </a>
       </div>
-    </div>
-  </section>
 
-  <!-- ═══ footer ══════════════════════════════════════ -->
-  <footer class="pagefoot" data-od-id="footer">
-    <div class="container pagefoot-inner">
-      <span class="meta">Dora Dondurma &amp; Patisserie</span>
-      <span class="meta">Mimaroba, Büyükçekmece · <a href="https://www.instagram.com/dora_dondurma/" target="_blank" rel="noopener">@dora_dondurma <i class="ph ph-arrow-up-right"></i></a></span>
-    </div>
-  </footer>
+      <!-- PANEL 4 — Trileçe -->
+      <div class="h-panel" data-index="3" data-color="warm">
+        <div class="product-drop">
+          <div class="product-fig">
+            <div style="display:flex;flex-direction:column;align-items:center;gap:4px">
+              <div style="
+                width:120px;height:48px;
+                background:linear-gradient(135deg,#f5d4b0 20%,#fae8ce 100%);
+                border-radius:6px 6px 2px 2px;
+                box-shadow:0 4px 14px #f5d4b044;
+              "></div>
+              <div style="
+                width:120px;height:10px;
+                background:#e8a040;
+                border-radius:2px;
+                box-shadow:0 2px 8px #e8a04044;
+              "></div>
+              <div style="
+                width:120px;height:48px;
+                background:linear-gradient(135deg,#f5d4b0 20%,#fae8ce 100%);
+                border-radius:2px 2px 6px 6px;
+                box-shadow:0 4px 14px #f5d4b044;
+              "></div>
+            </div>
+            <div class="product-info">
+              <h3>Trileçe</h3>
+              <p>Üç sütlü İtalyan tatlısı, hafif ve kremsi — her dilimde biraz daha mutluluk.</p>
+            </div>
+          </div>
+        </div>
+      </div>
 
-  <script src="script.js"></script>
+      <!-- PANEL 5 — Tiramisu -->
+      <div class="h-panel" data-index="4" data-color="warm">
+        <div class="product-drop">
+          <div class="product-fig">
+            <div style="display:flex;flex-direction:column;align-items:center;gap:4px">
+              <div style="
+                width:120px;height:20px;
+                background:#3d2a1a;
+                border-radius:4px 4px 0 0;
+              "></div>
+              <div style="
+                width:120px;height:32px;
+                background:#f0dcc0;
+                border-radius:0;
+              "></div>
+              <div style="
+                width:120px;height:20px;
+                background:#3d2a1a;
+                border-radius:0;
+              "></div>
+              <div style="
+                width:120px;height:32px;
+                background:#f0dcc0;
+                border-radius:0 0 4px 4px;
+              "></div>
+            </div>
+            <div class="product-info">
+              <h3>Tiramisu</h3>
+              <p>Kahveli, maskarponeli İtalyan klasiği — bir lokmada Venedik'e yolculuk.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PANEL 6 — Klasik Waffle -->
+      <div class="h-panel" data-index="5" data-color="warm">
+        <div class="product-drop">
+          <div class="product-fig">
+            <div style="display:flex;flex-direction:column;align-items:center;gap:8px">
+              <div class="scoop pink" style="width:64px;height:60px;font-size:8px">+1</div>
+              <div style="
+                width:100px;height:72px;
+                background:linear-gradient(135deg,#d4a868 20%,#e8c080 100%);
+                border-radius:6px;
+                display:grid;
+                grid-template-columns:1fr 1fr 1fr;
+                grid-template-rows:1fr 1fr 1fr;
+                gap:2px;
+                padding:4px;
+              ">
+                <div style="background:#c49a58;border-radius:2px"></div>
+                <div style="background:#c49a58;border-radius:2px"></div>
+                <div style="background:#c49a58;border-radius:2px"></div>
+                <div style="background:#c49a58;border-radius:2px"></div>
+                <div style="background:#c49a58;border-radius:2px"></div>
+                <div style="background:#c49a58;border-radius:2px"></div>
+                <div style="background:#c49a58;border-radius:2px"></div>
+                <div style="background:#c49a58;border-radius:2px"></div>
+                <div style="background:#c49a58;border-radius:2px"></div>
+              </div>
+            </div>
+            <div class="product-info">
+              <h3>Klasik Waffle</h3>
+              <p>Çikolata soslu, çıtır hamur, üstüne bir top dondurma — efsane ikili.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /h-track -->
+
+    <!-- step counter -->
+    <div class="step-counter" id="stepCounter">
+      <span class="step-dot active"></span>
+      <span class="step-dot"></span>
+      <span class="step-dot"></span>
+      <span class="step-dot"></span>
+      <span class="step-dot"></span>
+      <span class="step-dot"></span>
+      <span class="step-label">6 lezzet</span>
+    </div>
+  </div><!-- /h-sticky -->
+</div><!-- /h-wrap -->
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!--  CONTACT                                           -->
+<!-- ═══════════════════════════════════════════════════ -->
+<section class="contact" id="contact">
+  <div class="contact-card">
+    <h2>Bize Ulaşın</h2>
+    <p class="sub">Mimaroba'da sizi bekliyoruz — gelin, bir dondurma da bizden olsun.</p>
+    <div class="contact-row">
+      <i class="ph ph-map-pin"></i>
+      <span>Mimaroba, Büyükçekmece / İstanbul</span>
+    </div>
+    <div class="contact-row">
+      <i class="ph ph-clock"></i>
+      <span>Her gün 09:00 – 23:00</span>
+    </div>
+    <a href="https://www.instagram.com/dora_dondurma/" target="_blank" rel="noopener" class="contact-insta">
+      <i class="ph ph-instagram-logo"></i> @dora_dondurma
+    </a>
+
+    <div class="map-deco">
+      <div class="map-dot"></div>
+      <span class="map-label">Mimaroba</span>
+      <div class="map-street"></div>
+      <div class="map-street"></div>
+    </div>
+  </div>
+  <div class="contact-foot">
+    Dora Dondurma &amp; Patisserie · @dora_dondurma
+  </div>
+</section>
+
+<script>
+(function() {
+  // ─── hero frost particles ──
+  const frost = document.getElementById('heroFrost');
+  if (frost) {
+    for (let i = 0; i < 24; i++) {
+      const p = document.createElement('span');
+      p.className = 'pf';
+      p.style.cssText = `
+        left: ${Math.random() * 96 + 2}%;
+        top: ${Math.random() * 94 + 3}%;
+        width: ${Math.random() * 5 + 3}px;
+        height: ${Math.random() * 5 + 3}px;
+        opacity: ${Math.random() * 0.1 + 0.05};
+      `;
+      frost.appendChild(p);
+    }
+  }
+
+  // ─── horizontal scroll setup ──
+  const wrap = document.getElementById('hWrap');
+  const sticky = document.getElementById('hSticky');
+  const track = document.getElementById('hTrack');
+  const panels = track.querySelectorAll('.h-panel');
+  const dots = document.querySelectorAll('.step-dot');
+  const count = panels.length;
+
+  // create spacer
+  const spacer = document.createElement('div');
+  spacer.className = 'h-spacer';
+  spacer.style.height = (count * 100) + 'vh';
+  wrap.insertBefore(spacer, sticky);
+
+  let ticking = false;
+  let lastActive = -1;
+
+  function onScroll() {
+    const rect = wrap.getBoundingClientRect();
+    const wrapTop = wrap.offsetTop;
+    const viewH = window.innerHeight;
+    const scrollY = window.scrollY;
+    const totalScroll = (count * viewH) - viewH;
+
+    // progress within the horizontal section
+    let progress = (scrollY - wrapTop) / totalScroll;
+    progress = Math.max(0, Math.min(1, progress));
+
+    // translate track
+    const trackWidth = track.scrollWidth;
+    const visibleWidth = window.innerWidth;
+    const maxTranslate = trackWidth - visibleWidth;
+    const tx = -progress * maxTranslate;
+    track.style.transform = 'translateX(' + tx + 'px)';
+
+    // determine active panel
+    const activeIdx = Math.round(progress * (count - 1));
+    if (activeIdx !== lastActive) {
+      lastActive = activeIdx;
+      panels.forEach((p, i) => {
+        p.classList.toggle('active', i === activeIdx || i === activeIdx - 1);
+      });
+      dots.forEach((d, i) => {
+        d.classList.toggle('active', i <= activeIdx);
+      });
+    }
+  }
+
+  window.addEventListener('scroll', function() {
+    if (!ticking) {
+      window.requestAnimationFrame(function() {
+        onScroll();
+        ticking = false;
+      });
+      ticking = true;
+    }
+  }, { passive: true });
+
+  // initial state
+  onScroll();
+
+  // ─── handle resize ──
+  let resizeTimer;
+  window.addEventListener('resize', function() {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(onScroll, 100);
+  });
+
+  // ─── contact fade-in ──
+  const contactSection = document.getElementById('contact');
+  const contactObs = new IntersectionObserver(function(entries) {
+    entries.forEach(function(e) {
+      if (e.isIntersecting) {
+        e.target.style.opacity = '1';
+        e.target.style.transform = 'translateY(0)';
+        contactObs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.15 });
+  contactSection.style.opacity = '0';
+  contactSection.style.transform = 'translateY(20px)';
+  contactSection.style.transition = 'opacity 0.7s ease, transform 0.7s ease';
+  contactObs.observe(contactSection);
+
+})();
+</script>
 </body>
 </html>
