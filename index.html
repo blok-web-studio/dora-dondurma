@@ -244,7 +244,7 @@
       justify-content: center;
       align-items: center;
     }
-        .hero-blob {
+    .hero-blob {
       width: 380px;
       height: 380px;
       border-radius: 38% 62% 42% 58% / 52% 42% 58% 48%;
@@ -252,6 +252,7 @@
       opacity: 0.7;
       animation: blob-morph 12s ease-in-out infinite;
       filter: blur(2px);
+      transition: transform 0.08s ease-out;
       will-change: transform;
     }
     @keyframes blob-morph {
@@ -814,47 +815,22 @@
   var blob = document.getElementById('hero-blob');
   var hero = document.querySelector('.hero');
   if (blob && hero) {
-    var bx = 0, by = 0;        // current position
-    var vx = 0, vy = 0;        // velocity
-    var tx = 0, ty = 0;        // target position
-    var speed = 0;
-    var lastMX = 0, lastMY = 0;
-    var springId = null;
-
+    var blobTransition = false;
     hero.addEventListener('mousemove', function(e) {
       var rect = hero.getBoundingClientRect();
-      tx = ((e.clientX - rect.left) / rect.width - 0.5) * 60;
-      ty = ((e.clientY - rect.top) / rect.height - 0.5) * 60;
-      var dx = e.clientX - lastMX;
-      var dy = e.clientY - lastMY;
-      speed = Math.min(Math.sqrt(dx * dx + dy * dy), 100);
-      lastMX = e.clientX;
-      lastMY = e.clientY;
-      if (!springId) springId = requestAnimationFrame(tickBlob);
-    });
-
-    hero.addEventListener('mouseleave', function() { tx = 0; ty = 0; });
-
-    function tickBlob() {
-      var ax = (tx - bx) * 0.07;
-      var ay = (ty - by) * 0.07;
-      vx = (vx + ax) * 0.74;
-      vy = (vy + ay) * 0.74;
-      bx += vx;
-      by += vy;
-
-      var s = 1 + (speed / 100) * 0.1;
-      speed *= 0.9;
-
-      blob.style.transform = 'translate(' + bx.toFixed(1) + 'px,' + by.toFixed(1) + 'px) scale(' + s.toFixed(3) + ')';
-
-      if (Math.abs(vx) > 0.05 || Math.abs(vy) > 0.05 || Math.abs(tx - bx) > 0.1 || Math.abs(ty - by) > 0.1) {
-        springId = requestAnimationFrame(tickBlob);
-      } else {
-        springId = null;
-        blob.style.transform = '';
+      var x = ((e.clientX - rect.left) / rect.width - 0.5) * 40;
+      var y = ((e.clientY - rect.top) / rect.height - 0.5) * 40;
+      if (blobTransition) {
+        blob.style.transition = 'none';
+        blobTransition = false;
       }
-    }
+      blob.style.transform = 'translate(' + x + 'px, ' + y + 'px)';
+    });
+    hero.addEventListener('mouseleave', function() {
+      blob.style.transition = 'transform 0.5s ease';
+      blob.style.transform = 'translate(0, 0)';
+      blobTransition = true;
+    });
   }
 
   /* ═══════════════════════════════
