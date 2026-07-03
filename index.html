@@ -135,6 +135,8 @@
       font-size: 0.9rem;
       font-weight: 500;
       text-decoration: none;
+      border: none;
+      cursor: pointer;
       border-radius: 14px;
       transition: background 0.2s, transform 0.2s;
     }
@@ -201,6 +203,13 @@
     }
     .dock-item:active {
       transform: scale(0.95);
+    }
+    .dock-item.active {
+      background: rgba(194,101,74,0.12);
+      color: #c2654a;
+    }
+    .dock-item.active .ph {
+      color: #c2654a;
     }
     .dock-divider {
       width: 1px;
@@ -329,7 +338,6 @@
       opacity: 0.7;
       animation: blob-morph 12s ease-in-out infinite;
       filter: blur(2px);
-      transition: transform 0.08s ease-out;
       will-change: transform;
     }
     @keyframes blob-morph {
@@ -622,8 +630,8 @@
       .hero-inner { grid-template-columns: 1fr; gap: 32px; }
       .hero-text { max-width: none; }
       .hero-title { font-size: clamp(2.6rem, 12vw, 3.8rem); }
-      .hero-visual { display: none; }
-      .hero-blob { width: 200px; height: 200px; }
+      .hero-visual { display: flex; justify-content: center; align-items: center; min-height: 180px; }
+      .hero-blob { width: 180px; height: 180px; }
       .hero-cta { width: 100%; justify-content: center; }
 
       .content { padding: 0 20px 100px; }
@@ -710,9 +718,9 @@
         <i class="ph ph-map-pin"></i> Mimaroba, B&uuml;y&uuml;k&ccedil;ekmece &nbsp;
         <i class="ph ph-clock"></i> 13:00 &mdash; 02:00
       </p>
-      <a class="hero-cta" href="https://maps.app.goo.gl/zbYJJw6AQ8FRUeo96" target="_blank" rel="noopener">
-        Konumu G&ouml;r <i class="ph ph-arrow-right"></i>
-      </a>
+      <button class="hero-cta" data-scroll="menu">
+        Men&uuml;y&uuml; Ke&#351;fet <i class="ph ph-arrow-right"></i>
+      </button>
     </div>
     <div class="hero-visual">
       <div class="hero-blob" id="hero-blob"></div>
@@ -928,26 +936,30 @@
   });
 
   /* ═══════════════════════════════
-     1. MOUSE-REACTIVE BLOB
+     1. MOUSE-REACTIVE BLOB (smooth lerp)
      ═══════════════════════════════ */
   var blob = document.getElementById('hero-blob');
-  var hero = document.querySelector('.hero');
-  if (blob && hero) {
-    var blobTransition = false;
-    hero.addEventListener('mousemove', function(e) {
-      var rect = hero.getBoundingClientRect();
-      var x = ((e.clientX - rect.left) / rect.width - 0.5) * 40;
-      var y = ((e.clientY - rect.top) / rect.height - 0.5) * 40;
-      if (blobTransition) {
-        blob.style.transition = 'none';
-        blobTransition = false;
-      }
-      blob.style.transform = 'translate(' + x + 'px, ' + y + 'px)';
+  var heroEl = document.querySelector('.hero');
+  if (blob && heroEl) {
+    var blobTx = 0, blobTy = 0, blobCx = 0, blobCy = 0, blobRaf = null;
+    function tickBlob() {
+      blobCx += (blobTx - blobCx) * 0.1;
+      blobCy += (blobTy - blobCy) * 0.1;
+      blob.style.transform = 'translate(' + blobCx.toFixed(3) + 'px, ' + blobCy.toFixed(3) + 'px)';
+      if (Math.abs(blobCx - blobTx) > 0.01 || Math.abs(blobCy - blobTy) > 0.01) {
+        blobRaf = requestAnimationFrame(tickBlob);
+      } else { blobRaf = null; }
+    }
+    function startBlobRaf() { if (!blobRaf) blobRaf = requestAnimationFrame(tickBlob); }
+    heroEl.addEventListener('mousemove', function(e) {
+      var r = heroEl.getBoundingClientRect();
+      blobTx = ((e.clientX - r.left) / r.width - 0.5) * 40;
+      blobTy = ((e.clientY - r.top) / r.height - 0.5) * 40;
+      startBlobRaf();
     });
-    hero.addEventListener('mouseleave', function() {
-      blob.style.transition = 'transform 0.5s ease';
-      blob.style.transform = 'translate(0, 0)';
-      blobTransition = true;
+    heroEl.addEventListener('mouseleave', function() {
+      blobTx = 0; blobTy = 0;
+      startBlobRaf();
     });
   }
 
@@ -1021,6 +1033,31 @@
       if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
     });
   });
+
+  /* ═══════════════════════════════
+     5. DOCK ACTIVE SECTION
+     ═══════════════════════════════ */
+  var dockItems = document.querySelectorAll('.dock-item[data-scroll]');
+  var dockSections = [];
+  dockItems.forEach(function(item) {
+    var id = item.getAttribute('data-scroll');
+    var el = document.getElementById(id);
+    if (el) dockSections.push({ el: el, btn: item });
+  });
+  if (dockSections.length && 'IntersectionObserver' in window) {
+    var dockObs = new IntersectionObserver(function(entries) {
+      entries.forEach(function(e) {
+        var match = dockSections.find(function(s) { return s.el === e.target; });
+        if (!match) return;
+        if (e.isIntersecting) {
+          match.btn.classList.add('active');
+        } else {
+          match.btn.classList.remove('active');
+        }
+      });
+    }, { threshold: 0, rootMargin: '-40% 0px -40% 0px' });
+    dockSections.forEach(function(s) { dockObs.observe(s.el); });
+  }
 })();
 </script>
 </body>
