@@ -41,7 +41,7 @@
       min-height: 100vh;
       display: flex;
       align-items: center;
-      padding: 60px 32px 100px;
+      padding: 100px 32px 100px;
       background: #faf5ef;
       overflow: hidden;
     }
@@ -150,8 +150,51 @@
       transform: translateX(4px);
     }
 
+    /* ── navbar ── */
+    .navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 32px;
+      background: linear-gradient(180deg, rgba(232,213,204,0.85) 0%, rgba(232,213,204,0) 100%);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      pointer-events: none;
+    }
+    .navbar a {
+      pointer-events: auto;
+      text-decoration: none;
+    }
+    .navbar-logo {
+      font-family: 'Fraunces', serif;
+      font-size: 1.25rem;
+      font-weight: 500;
+      font-variation-settings: 'SOFT' 85;
+      color: #221a15;
+      letter-spacing: -0.02em;
+    }
+    .navbar-social {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.85rem;
+      color: #7a6a5a;
+      transition: color 0.2s;
+    }
+    .navbar-social:hover {
+      color: #c2654a;
+    }
+    .navbar-social i {
+      font-size: 1.1rem;
+    }
+
     /* ── startup animation ── */
-    .hero-kicker,
     .hero-title,
     .hero-sub,
     .hero-detail,
@@ -169,20 +212,17 @@
     @keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
     @keyframes blob-fade-in { from { opacity: 0; } to { opacity: 0.7; } }
 
-    body.loaded .hero-kicker {
+    body.loaded .hero-title {
       animation: fade-up 0.6s cubic-bezier(0.22,1,0.36,1) 0.1s both;
     }
-    body.loaded .hero-title {
-      animation: fade-up 0.6s cubic-bezier(0.22,1,0.36,1) 0.25s both;
-    }
     body.loaded .hero-sub {
-      animation: fade-up 0.6s cubic-bezier(0.22,1,0.36,1) 0.4s both;
+      animation: fade-up 0.6s cubic-bezier(0.22,1,0.36,1) 0.2s both;
     }
     body.loaded .hero-detail {
-      animation: fade-up 0.6s cubic-bezier(0.22,1,0.36,1) 0.55s both;
+      animation: fade-up 0.6s cubic-bezier(0.22,1,0.36,1) 0.3s both;
     }
     body.loaded .hero-cta {
-      animation: fade-up 0.6s cubic-bezier(0.22,1,0.36,1) 0.7s both;
+      animation: fade-up 0.6s cubic-bezier(0.22,1,0.36,1) 0.4s both;
     }
     body.loaded .hero-blob {
       animation: blob-fade-in 0.8s ease 0.2s both;
@@ -540,7 +580,7 @@
 
     /* ── responsive ── */
     @media (max-width: 768px) {
-      .hero { min-height: 100vh; padding: 48px 20px 80px; }
+      .hero { min-height: 100vh; padding: 80px 20px 80px; }
       .hero-inner { grid-template-columns: 1fr; gap: 32px; }
       .hero-text { max-width: none; }
       .hero-title { font-size: clamp(2.6rem, 12vw, 3.8rem); }
@@ -574,11 +614,18 @@
 </head>
 <body>
 
+<!-- ══ NAVBAR ══ -->
+<nav class="navbar">
+  <span class="navbar-logo">Dora</span>
+  <a class="navbar-social" href="https://www.instagram.com/dora_dondurma" target="_blank" rel="noopener">
+    <i class="ph ph-instagram-logo"></i> @dora_dondurma
+  </a>
+</nav>
+
 <!-- ══ HERO ══ -->
 <section class="hero">
   <div class="hero-inner">
     <div class="hero-text">
-      <p class="hero-kicker">Mimaroba</p>
       <h1 class="hero-title">
         Dora<br />
         <em>Dondurma &amp;</em><br />
