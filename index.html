@@ -6,11 +6,16 @@
   <title>Dora Dondurma &amp; Patisserie · Mimaroba</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300..800;1,9..40,300..800&family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300..800;1,9..40,300..800&family=Fredoka:wght@400;500;600;700&family=Caveat:wght@500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css" />
-  <meta name="theme-color" content="#ff2975">
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='15' fill='%23ff2975'/%3E%3Cpath d='M10 20 Q16 8 22 20' fill='none' stroke='white' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E">
+  <meta name="theme-color" content="#ff8fab">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🍦%3C/text%3E%3C/svg%3E">
   <style>
+    /* ═══════════════════════════════════════════
+       DORA — Dessert Picnic
+       A picnic blanket on a sunny day.
+       ═══════════════════════════════════════════ */
+
     /* ── reset ── */
     *, *::before, *::after { box-sizing: border-box; }
     html { -webkit-text-size-adjust: 100%; }
@@ -19,764 +24,742 @@
       font-family: 'DM Sans', system-ui, sans-serif;
       font-size: 17px;
       line-height: 1.58;
-      color: #2d2a24;
+      color: #3d2c1e;
       text-rendering: optimizeLegibility;
       -webkit-font-smoothing: antialiased;
       overflow-x: hidden;
+      background: #87CEEB;
     }
-    ::selection { background: #ff297520; color: #2d2a24; }
-    a { color: inherit; text-decoration: none; }
-    p { text-wrap: pretty; }
-    h1, h2, h3, h4 { text-wrap: balance; }
+    ::selection { background: #ffb3c680; color: #3d2c1e; }
+    a { color: inherit; }
+    p { text-wrap: pretty; margin: 0; }
+    h1, h2, h3, h4 { text-wrap: balance; margin: 0; }
+    img { max-width: 100%; display: block; }
 
-    /* ── ════════════════════════════════════════════ ── */
-    /* ──  HERO                                         ── */
-    /* ── ════════════════════════════════════════════ ── */
-    .hero {
+    /* ── scene sky ── */
+    .scene-sky {
       position: relative;
-      z-index: 2;
-      height: 100vh;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      background: linear-gradient(180deg, #f2f6ff 0%, #f7f2e9 100%);
+      height: 45vh;
+      min-height: 340px;
+      background: linear-gradient(180deg, #6ac8ff 0%, #9ed8ff 45%, #c8eaff 70%, #e8f5ff 100%);
       overflow: hidden;
-      padding: 0 28px;
     }
-    .hero-inner {
-      max-width: 1180px;
-      margin: 0 auto;
-      width: 100%;
+
+    /* sun */
+    .sun {
+      position: absolute;
+      top: 5%;
+      right: 8%;
+      width: 110px;
+      height: 110px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 35%, #fff4a3, #ffd700 50%, #ffb800);
+      box-shadow:
+        0 0 40px rgba(255, 215, 0, 0.3),
+        0 0 80px rgba(255, 215, 0, 0.15),
+        0 0 120px rgba(255, 215, 0, 0.08);
     }
-    .hero-wordmark {
-      font-family: 'Fraunces', Georgia, serif;
-      font-size: clamp(72px, 14vw, 160px);
-      font-weight: 500;
-      line-height: 0.88;
-      letter-spacing: -0.05em;
-      font-variation-settings: 'SOFT' 60;
-      color: #ff2975;
-      margin: 0;
-      position: relative;
-      display: inline-block;
-    }
-    .hero-wordmark::after {
+    .sun::after {
       content: '';
       position: absolute;
-      bottom: 6px;
-      left: 2%;
-      width: 96%;
-      height: 8px;
-      background: #ff2975;
-      opacity: 0.18;
-      border-radius: 4px;
-      transform: rotate(-0.8deg);
+      inset: -15px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255,215,0,0.08) 0%, transparent 70%);
+      animation: sun-pulse 4s ease-in-out infinite;
+    }
+    @keyframes sun-pulse {
+      0%, 100% { opacity: 0.6; transform: scale(1); }
+      50% { opacity: 1; transform: scale(1.08); }
+    }
+
+    /* clouds */
+    .cloud {
+      position: absolute;
+      font-size: 64px;
+      opacity: 0.7;
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.05));
+      animation: cloud-drift linear infinite;
+    }
+    .cloud--1 {
+      top: 10%;
+      left: -80px;
+      font-size: 72px;
+      animation-duration: 50s;
+    }
+    .cloud--2 {
+      top: 25%;
+      left: -120px;
+      font-size: 56px;
+      animation-duration: 70s;
+      animation-delay: -20s;
+      opacity: 0.5;
+    }
+    @keyframes cloud-drift {
+      from { transform: translateX(-100px); }
+      to { transform: translateX(calc(100vw + 100px)); }
+    }
+
+    /* birds (tiny accent) */
+    .birds {
+      position: absolute;
+      top: 18%;
+      left: 15%;
+      font-size: 20px;
+      letter-spacing: 6px;
+      opacity: 0.3;
+      filter: blur(0.5px);
+    }
+
+    /* ── grass hill ── */
+    .scene-grass {
+      position: relative;
+      height: 100px;
+      margin-top: -2px;
+      background: linear-gradient(180deg, #7ec850, #6ab83a 60%, #5da52f);
+      border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+    }
+    /* grass tufts (tiny details) */
+    .scene-grass::before {
+      content: '🌿🌱🌸🌱🌿';
+      position: absolute;
+      top: -8px;
+      left: 5%;
+      font-size: 20px;
+      letter-spacing: 12px;
+      opacity: 0.35;
+      width: 90%;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+
+    /* ── picnic blanket ── */
+    .blanket {
+      position: relative;
+      background-color: #fef6f3;
+      background-image:
+        repeating-linear-gradient(
+          0deg,
+          #ffcdd9 0px,
+          #ffcdd9 2.5px,
+          transparent 2.5px,
+          transparent 28px
+        ),
+        repeating-linear-gradient(
+          90deg,
+          #ffcdd9 0px,
+          #ffcdd9 2.5px,
+          transparent 2.5px,
+          transparent 28px
+        );
+      padding: 32px 20px 48px;
+      min-height: 80vh;
+    }
+    /* blanket "fringe" at the top (wavy edge) */
+    .blanket::before {
+      content: '';
+      position: absolute;
+      top: -18px;
+      left: 0;
+      right: 0;
+      height: 18px;
+      background:
+        radial-gradient(ellipse at 10% 100%, #fef6f3 0%, #fef6f3 40%, transparent 41%) repeat-x;
+      background-size: 30px 18px;
+      opacity: 0.9;
+    }
+
+    /* ── hero ── */
+    .hero {
+      text-align: center;
+      padding: 20px 0 32px;
+      position: relative;
+    }
+    .hero-balloons {
+      font-size: 36px;
+      line-height: 1;
+      margin-bottom: 2px;
+      animation: float-balloons 3s ease-in-out infinite;
+    }
+    @keyframes float-balloons {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-6px); }
+    }
+    .hero-title {
+      font-family: 'Fredoka', sans-serif;
+      font-weight: 700;
+      font-size: clamp(3.2rem, 12vw, 6rem);
+      line-height: 1.05;
+      letter-spacing: -0.02em;
+      background: linear-gradient(135deg, #ff6b8a, #ff8fab 30%, #ffb347 65%, #ffd700);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      filter: drop-shadow(0 2px 4px rgba(255,107,138,0.15));
+    }
+    .hero-sub {
+      font-family: 'Fredoka', sans-serif;
+      font-weight: 500;
+      font-size: clamp(1rem, 3.5vw, 1.5rem);
+      color: #e85d7a;
+      margin-top: 2px;
     }
     .hero-tagline {
-      font-family: 'Fraunces', Georgia, serif;
-      font-size: clamp(20px, 2.8vw, 32px);
-      font-weight: 400;
-      font-style: italic;
-      font-variation-settings: 'SOFT' 85;
-      color: #6e675b;
-      line-height: 1.2;
-      max-width: 24ch;
-      margin: 16px 0 20px;
+      font-family: 'Caveat', cursive;
+      font-size: clamp(1.3rem, 4vw, 1.8rem);
+      color: #5da52f;
+      margin-top: 10px;
     }
-    .hero-meta {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 20px;
-      font-size: 15px;
-      color: #8a7e72;
-    }
-    .hero-meta span {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-    }
-    .hero-meta i { font-size: 17px; color: #ff2975; }
-
-    /* ── scroll-down indicator ── */
-    .scroll-indicator {
-      position: absolute;
-      bottom: 32px;
-      left: 50%;
-      transform: translateX(-50%);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 6px;
-      color: #b0a89e;
-      font-size: 11px;
-      letter-spacing: 3px;
-      text-transform: uppercase;
-      animation: scrollBounce 2.4s ease-in-out infinite;
-    }
-    @keyframes scrollBounce {
-      0%, 100% { transform: translateX(-50%) translateY(0); }
-      50% { transform: translateX(-50%) translateY(8px); }
-    }
-    .scroll-indicator i {
-      font-size: 16px;
-      color: #ff2975;
+    .hero-story {
+      font-size: 0.92rem;
+      color: #8a7a6a;
+      margin-top: 8px;
+      max-width: 340px;
+      margin-left: auto;
+      margin-right: auto;
     }
 
-    /* ── frost particles hero ── */
-    .hero-frost {
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-      overflow: hidden;
-      z-index: 0;
-    }
-    .pf {
-      position: absolute;
-      width: 6px; height: 6px;
-      border-radius: 50%;
-      background: #b8d4ff;
-      opacity: 0.15;
+    /* ── divider (flower path) ── */
+    .divider {
+      text-align: center;
+      font-size: 18px;
+      letter-spacing: 8px;
+      opacity: 0.5;
+      margin: 24px 0 20px;
     }
 
-    /* ── ════════════════════════════════════════════ ── */
-    /* ──  HORIZONTAL SCROLL                             ── */
-    /* ── ════════════════════════════════════════════ ── */
-
-    .h-wrap {
+    /* ── picnic dishes ── */
+    .picnic-dish {
+      margin: 28px auto;
+      max-width: 500px;
       position: relative;
-      z-index: 1;
     }
-    /* spacer div to create scroll room: injected by JS */
-    .h-spacer {
-      pointer-events: none;
-    }
-    .h-sticky {
-      position: sticky;
-      top: 0;
-      height: 100vh;
-      overflow: hidden;
-    }
-    .h-track {
-      display: flex;
-      height: 100vh;
-      will-change: transform;
-    }
-    .h-panel {
-      flex: 0 0 100vw;
-      height: 100vh;
-      position: relative;
+    .dish-header {
       display: flex;
       align-items: center;
-      justify-content: center;
-      overflow: hidden;
+      gap: 10px;
+      margin-bottom: 14px;
+      padding: 0 6px;
     }
-
-    /* panel backgrounds — cold → warm gradient across panels */
-    .h-panel:nth-child(1) { background: #f2f6ff; }
-    .h-panel:nth-child(2) { background: #f4f3f5; }
-    .h-panel:nth-child(3) { background: #f7f0ef; }
-    .h-panel:nth-child(4) { background: #f9edea; }
-    .h-panel:nth-child(5) { background: #fbeae6; }
-    .h-panel:nth-child(6) { background: #fde8e3; }
-
-    /* ── drop-in product ── */
-    .product-drop {
-      position: relative;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 8px;
-      transform: translateY(-120%);
-      opacity: 0;
-      transition: transform 0.7s cubic-bezier(0.22, 0.9, 0.35, 1.15),
-                  opacity 0.4s ease;
-      will-change: transform, opacity;
+    .dish-icon {
+      font-size: 32px;
+      line-height: 1;
     }
-    .h-panel.active .product-drop {
-      transform: translateY(0);
-      opacity: 1;
-    }
-
-    /* ── cone shape ── */
-    .cone {
-      width: 0;
-      height: 0;
-      border-left: 48px solid transparent;
-      border-right: 48px solid transparent;
-      border-top: 90px solid #d4a868;
-      filter: drop-shadow(0 4px 12px #d4a86844);
-      transition: filter 0.3s;
-    }
-    .cone.small {
-      border-left-width: 32px;
-      border-right-width: 32px;
-      border-top-width: 60px;
-    }
-    .cone:hover {
-      filter: drop-shadow(0 6px 18px #d4a86866);
-    }
-
-    /* ── scoop ── */
-    .scoop {
-      width: 96px;
-      height: 88px;
-      border-radius: 50% 50% 45% 45%;
-      display: grid;
-      place-items: center;
-      font-size: 11px;
+    .dish-header h2 {
+      font-family: 'Fredoka', sans-serif;
       font-weight: 600;
-      letter-spacing: 0.5px;
-      text-transform: uppercase;
-      color: rgba(255,255,255,0.55);
-      transition: transform 0.25s ease-out;
-      will-change: transform;
+      font-size: 1.35rem;
+      color: #3d2c1e;
     }
-    .scoop:hover {
-      transform: scale(1.06);
-    }
-    .scoop:active {
-      transform: scale(0.97);
-    }
-    .scoop.pink {
-      background: linear-gradient(135deg, #ff2975 20%, #ff6b9d 100%);
-      box-shadow: 0 6px 24px #ff297544;
-    }
-    .scoop.cream {
-      background: linear-gradient(135deg, #ffe8d6 20%, #fff5f0 100%);
-      color: #8a7e72;
-      box-shadow: 0 6px 24px #ffe8d644;
-    }
-    .scoop.green {
-      background: linear-gradient(135deg, #6bb87c 20%, #8fd49e 100%);
-      box-shadow: 0 6px 24px #6bb87c44;
-    }
-    .scoop.blue {
-      background: linear-gradient(135deg, #7eb8e0 20%, #a8d4f0 100%);
-      box-shadow: 0 6px 24px #7eb8e044;
-    }
-    .scoop.gold {
-      background: linear-gradient(135deg, #e8a040 20%, #f5c06a 100%);
-      box-shadow: 0 6px 24px #e8a04044;
-    }
-    .scoop.choco {
-      background: linear-gradient(135deg, #5a3e2e 20%, #8c6e5a 100%);
-      box-shadow: 0 6px 24px #5a3e2e44;
+    .dish-header h2 small {
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 400;
+      font-size: 0.7rem;
+      color: #8a7a6a;
+      display: block;
+      margin-top: -2px;
     }
 
-    /* ── product info beside cone ── */
-    .product-fig {
-      display: flex;
-      align-items: center;
-      gap: 40px;
-    }
-    .product-info {
-      max-width: 240px;
-    }
-    .product-info h3 {
-      font-family: 'Fraunces', Georgia, serif;
-      font-weight: 500;
-      font-size: 28px;
-      font-variation-settings: 'SOFT' 70;
-      line-height: 1.1;
-      margin: 0 0 4px;
-    }
-    .product-info p {
-      font-size: 14px;
-      color: #6e675b;
-      margin: 0;
-      line-height: 1.4;
-    }
-
-    /* ── step counter ── */
-    .step-counter {
-      position: absolute;
-      bottom: 28px;
-      left: 50%;
-      transform: translateX(-50%);
-      display: flex;
-      gap: 8px;
-      align-items: center;
-    }
-    .step-dot {
-      width: 8px; height: 8px;
-      border-radius: 50%;
-      background: #d5cdc5;
-      transition: background 0.3s, transform 0.3s;
-    }
-    .step-dot.active {
-      background: #ff2975;
-      transform: scale(1.3);
-    }
-    .step-label {
-      font-size: 11px;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      color: #b0a89e;
-      margin-left: 10px;
-    }
-
-    /* ── ════════════════════════════════════════════ ── */
-    /* ──  CONTACT  (vertical, normal)                    ── */
-    /* ── ════════════════════════════════════════════ ── */
-
-    .contact {
-      min-height: 100vh;
+    .dish-items {
       display: flex;
       flex-direction: column;
-      justify-content: center;
+      gap: 10px;
+    }
+
+    .dish-card {
+      background: rgba(255,255,255,0.88);
+      backdrop-filter: blur(2px);
+      border-radius: 16px;
+      padding: 14px 18px;
+      display: flex;
       align-items: center;
-      padding: 80px 28px;
-      background: linear-gradient(180deg, #fde8e3 0%, #f7f2e9 100%);
+      gap: 14px;
+      box-shadow:
+        0 2px 8px rgba(0,0,0,0.06),
+        0 1px 3px rgba(0,0,0,0.04);
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+      transform: rotate(var(--rot, 0deg));
+      position: relative;
+      opacity: 0;
+      transform: rotate(var(--rot, 0deg)) translateY(16px);
+    }
+    .dish-card.revealed {
+      opacity: 1;
+      transform: rotate(var(--rot, 0deg)) translateY(0);
+      transition: opacity 0.5s ease, transform 0.5s ease, box-shadow 0.25s ease;
+    }
+    .dish-card:nth-child(1) { --rot: -0.8deg; }
+    .dish-card:nth-child(2) { --rot: 0.7deg; }
+    .dish-card:nth-child(3) { --rot: -0.3deg; }
+
+    .dish-card:hover {
+      box-shadow:
+        0 6px 20px rgba(0,0,0,0.08),
+        0 2px 6px rgba(0,0,0,0.04);
+      transform: rotate(var(--rot, 0deg)) translateY(-2px);
+    }
+
+    .card-emoji {
+      font-size: 30px;
+      line-height: 1;
+      flex-shrink: 0;
+      width: 40px;
       text-align: center;
     }
-    .contact-card {
-      max-width: 480px;
-      margin: 0 auto;
+    .card-text {
+      flex: 1;
+      min-width: 0;
     }
-    .contact-card h2 {
-      font-family: 'Fraunces', Georgia, serif;
-      font-size: clamp(32px, 5vw, 48px);
+    .card-text strong {
+      font-family: 'Fredoka', sans-serif;
+      font-weight: 600;
+      font-size: 1rem;
+      display: block;
+    }
+    .card-text span {
+      font-size: 0.82rem;
+      color: #8a7a6a;
+      display: block;
+      margin-top: 1px;
+    }
+    .card-price {
+      font-family: 'Fredoka', sans-serif;
       font-weight: 500;
-      font-variation-settings: 'SOFT' 80;
-      color: #ff2975;
-      margin: 0 0 6px;
-      line-height: 1.1;
+      font-size: 0.92rem;
+      color: #e85d7a;
+      flex-shrink: 0;
+      white-space: nowrap;
     }
-    .contact-card .sub {
-      font-size: 15px;
-      color: #6e675b;
-      margin: 0 0 40px;
+
+    /* accent tape for each dish category */
+    .picnic-dish--dondurma .dish-card { border-left: 3px solid #ffb3c6; }
+    .picnic-dish--pastane  .dish-card { border-left: 3px solid #ffd700; }
+    .picnic-dish--icecek   .dish-card { border-left: 3px solid #7ec850; }
+    .picnic-dish--waffle   .dish-card { border-left: 3px solid #c4906a; }
+
+    /* ── pinned note ── */
+    .pinned-note {
+      max-width: 420px;
+      margin: 44px auto 28px;
+      position: relative;
+      padding-top: 18px;
     }
-    .contact-row {
+    .pushpin {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 26px;
+      line-height: 1;
+      animation: pin-wiggle 2s ease-in-out infinite;
+    }
+    @keyframes pin-wiggle {
+      0%, 100% { transform: translateX(-50%) rotate(0deg); }
+      25% { transform: translateX(-50%) rotate(-3deg); }
+      75% { transform: translateX(-50%) rotate(3deg); }
+    }
+    .note-body {
+      background: #fffdf0;
+      border-radius: 2px;
+      padding: 28px 24px 22px;
+      box-shadow:
+        0 1px 4px rgba(0,0,0,0.06),
+        0 4px 12px rgba(0,0,0,0.04),
+        inset 0 0 0 1px rgba(0,0,0,0.03);
+      transform: rotate(-0.5deg);
+      font-family: 'Caveat', cursive;
+    }
+    .note-body h3 {
+      font-family: 'Caveat', cursive;
+      font-weight: 700;
+      font-size: 1.6rem;
+      color: #3d2c1e;
+      margin-bottom: 10px;
+    }
+    .note-row {
       display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      font-size: 15px;
-      color: #2d2a24;
-      margin-bottom: 12px;
+      align-items: flex-start;
+      gap: 10px;
+      margin-bottom: 6px;
     }
-    .contact-row i { color: #ff2975; font-size: 18px; }
-    .contact-insta {
+    .note-row:last-child { margin-bottom: 0; }
+    .note-icon {
+      font-size: 18px;
+      line-height: 1.5;
+      flex-shrink: 0;
+      min-width: 22px;
+      text-align: center;
+      color: #e85d7a;
+    }
+    .note-icon i { font-size: 18px; }
+    .note-row p {
+      font-size: 1.08rem;
+      line-height: 1.45;
+      color: #5a4a3a;
+    }
+    .note-row p small {
+      font-size: 0.85rem;
+      color: #8a7a6a;
+    }
+    .note-maps a {
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      margin-top: 28px;
-      font-size: 15px;
-      font-weight: 500;
-      color: #ff2975;
-      transition: gap 0.2s;
+      font-size: 1rem;
+      font-family: 'DM Sans', sans-serif;
+      color: #e85d7a;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+      text-decoration-thickness: 1.5px;
+      text-decoration-color: #ffcdd9;
+      margin-top: 4px;
     }
-    .contact-insta:hover { gap: 10px; }
+    .note-maps a i {
+      font-size: 16px;
+    }
 
-    /* ── map-ish deco ── */
-    .map-deco {
-      width: 100%;
-      max-width: 480px;
-      height: 200px;
-      margin: 40px auto 0;
-      border-radius: 16px;
-      background:
-        radial-gradient(circle at 30% 40%, #ffd5cc 0%, transparent 40%),
-        radial-gradient(circle at 70% 60%, #b8d4ff 0%, transparent 40%),
-        #f0e9de;
-      position: relative;
-      overflow: hidden;
-      border: 1px solid #ece4dc;
+    /* ── footer ── */
+    .blanket-footer {
+      text-align: center;
+      padding: 32px 16px 8px;
+      font-size: 0.78rem;
+      color: #b5a598;
+      border-top: 1px dashed #e5d5c8;
+      margin-top: 20px;
     }
-    .map-dot {
-      position: absolute;
-      width: 14px; height: 14px;
-      border-radius: 50%;
-      background: #ff2975;
-      left: 46%; top: 48%;
-      box-shadow: 0 0 0 4px #ff297522, 0 0 0 10px #ff297511;
-      animation: mapPulse 2.4s ease-in-out infinite;
+    .blanket-footer a {
+      color: #e85d7a;
+      text-decoration: underline;
+      text-underline-offset: 2px;
     }
-    @keyframes mapPulse {
-      0%, 100% { box-shadow: 0 0 0 4px #ff297522, 0 0 0 10px #ff297511; }
-      50% { box-shadow: 0 0 0 6px #ff297522, 0 0 0 16px #ff297511; }
+
+    /* ── demo badge ── */
+    .demo-badge {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      max-width: 300px;
+      background: rgba(255,255,255,0.88);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 205, 217, 0.4);
+      border-radius: 12px;
+      padding: 10px 16px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+      font-size: 0.78rem;
+      line-height: 1.45;
+      z-index: 100;
+      transform: translateY(150%);
+      transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+      color: #5a4a3a;
     }
-    .map-label {
-      position: absolute;
-      left: calc(46% + 22px);
-      top: 42%;
-      font-size: 11px;
+    .demo-badge.visible {
+      transform: translateY(0);
+    }
+    .demo-badge strong {
+      font-family: 'Fredoka', sans-serif;
       font-weight: 600;
-      letter-spacing: 1px;
+      color: #e85d7a;
+    }
+    .demo-badge .demo-label {
+      font-size: 0.65rem;
       text-transform: uppercase;
-      color: #6e675b;
-      background: #fcf9f4;
-      padding: 3px 10px;
-      border-radius: 20px;
-      border: 1px solid #ece4dc;
+      letter-spacing: 0.05em;
+      color: #b5a598;
+      margin-bottom: 1px;
     }
-    .map-street {
-      position: absolute;
-      width: 1px; height: 60px;
-      background: #d5cdc5;
-      left: 60%; top: 30%;
-      transform: rotate(30deg);
-    }
-    .map-street:nth-child(4) {
-      left: 30%; top: 55%;
-      height: 80px;
-      transform: rotate(-20deg);
+    .demo-badge a {
+      color: #e85d7a;
+      text-decoration: underline;
+      text-underline-offset: 2px;
     }
 
-    .contact-foot {
-      margin-top: 60px;
-      font-size: 12px;
-      color: #9a9387;
-      letter-spacing: 2px;
-    }
-
-    /* ── ════════════════════════════════════════════ ── */
-    /* ──  RESPONSIVE                                     ── */
-    /* ── ════════════════════════════════════════════ ── */
-
-    @media (max-width: 700px) {
-      .product-fig {
-        flex-direction: column;
-        gap: 20px;
+    /* ── responsive ── */
+    @media (max-width: 600px) {
+      .scene-sky { height: 38vh; min-height: 260px; }
+      .sun { width: 80px; height: 80px; right: 6%; }
+      .cloud { font-size: 44px; }
+      .cloud--1 { font-size: 52px; }
+      .cloud--2 { font-size: 40px; }
+      .scene-grass { height: 70px; }
+      .blanket { padding: 20px 14px 32px; }
+      .dish-card { padding: 12px 14px; gap: 10px; }
+      .card-emoji { font-size: 26px; width: 34px; }
+      .note-body { padding: 20px 16px 18px; }
+      .demo-badge {
+        right: 10px;
+        bottom: 12px;
+        left: 10px;
+        max-width: none;
         text-align: center;
       }
-      .product-info { text-align: center; }
-      .hero { padding: 0 20px; }
-      .contact { padding: 60px 20px; }
-      .map-deco { height: 160px; }
+    }
+
+    @media (min-width: 768px) {
+      .blanket { padding: 40px 32px 60px; }
+      .dish-items {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+      }
+      .picnic-dish { max-width: 620px; }
+      .note-body { padding: 32px 32px 26px; }
+    }
+
+    @media (min-width: 1024px) {
+      .blanket { max-width: 740px; margin: 0 auto; border-radius: 0 0 20px 20px; }
     }
   </style>
 </head>
 <body>
 
-<!-- ═══════════════════════════════════════════════════ -->
-<!--  HERO                                              -->
-<!-- ═══════════════════════════════════════════════════ -->
-<section class="hero" id="hero">
-  <div class="hero-frost" id="heroFrost"></div>
-  <div class="hero-inner">
-    <h1 class="hero-wordmark">Dora</h1>
-    <p class="hero-tagline">Mimaroba'nın tatlı molası</p>
-    <div class="hero-meta">
-      <span><i class="ph ph-map-pin"></i> Mimaroba, Büyükçekmece</span>
-      <span><i class="ph ph-clock"></i> Her gün 09:00 – 23:00</span>
-    </div>
-  </div>
-  <div class="scroll-indicator">
-    <span>Lezzetleri keşfet</span>
-    <i class="ph ph-caret-double-down"></i>
-  </div>
+<!-- ══ SKY ══ -->
+<section class="scene-sky" aria-hidden="true">
+  <div class="sun" role="img" aria-label="Sun"></div>
+  <div class="cloud cloud--1" aria-hidden="true">☁️</div>
+  <div class="cloud cloud--2" aria-hidden="true">☁️</div>
+  <div class="birds" aria-hidden="true">🐦🐦</div>
 </section>
 
-<!-- ═══════════════════════════════════════════════════ -->
-<!--  HORIZONTAL SCROLL                                 -->
-<!-- ═══════════════════════════════════════════════════ -->
-<div class="h-wrap" id="hWrap">
+<!-- ══ GRASS ══ -->
+<section class="scene-grass" aria-hidden="true"></section>
 
-  <!-- spacer injected by JS creates the scroll distance -->
+<!-- ══ PICNIC BLANKET ══ -->
+<main class="blanket">
 
-  <div class="h-sticky" id="hSticky">
-    <div class="h-track" id="hTrack">
+  <!-- HERO -->
+  <header class="hero">
+    <div class="hero-balloons" aria-hidden="true">🎈🎈</div>
+    <h1 class="hero-title">DORA</h1>
+    <p class="hero-sub">Dondurma &amp; Patisserie</p>
+    <p class="hero-tagline">🌿 Katkısız, doğal, rengârenk</p>
+    <p class="hero-story">Bir aile işletmesi. Kızlarına adanmış bir hayal. 🍦</p>
+  </header>
 
-      <!-- PANEL 1 — Sakızlı Damla -->
-      <div class="h-panel" data-index="0" data-color="cold">
-        <div class="product-drop">
-          <div class="product-fig">
-            <div style="display:flex;flex-direction:column;align-items:center;gap:0">
-              <div class="scoop pink" style="width:108px;height:100px;font-size:12px">Sakızlı</div>
-              <div class="cone"></div>
-            </div>
-            <div class="product-info">
-              <h3>Sakızlı Damla</h3>
-              <p>Sakız aromalı geleneksel dondurma, pürüzsüz kıvam — Osmanlı'dan bugüne.</p>
-            </div>
-          </div>
-        </div>
-      </div>
+  <div class="divider" aria-hidden="true">🌸 🌼 🌷</div>
 
-      <!-- PANEL 2 — Sade Krem -->
-      <div class="h-panel" data-index="1" data-color="cool">
-        <div class="product-drop">
-          <div class="product-fig">
-            <div style="display:flex;flex-direction:column;align-items:center;gap:0">
-              <div class="scoop cream" style="width:108px;height:100px;font-size:12px">Sade</div>
-              <div class="cone"></div>
-            </div>
-            <div class="product-info">
-              <h3>Sade Krem</h3>
-              <p>Doğal kaymak tadı, vanilyalı klasik — her gün taze, her damakta favori.</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- PANEL 3 — Antep Fıstıklı -->
-      <div class="h-panel" data-index="2" data-color="warm">
-        <div class="product-drop">
-          <div class="product-fig">
-            <div style="display:flex;flex-direction:column;align-items:center;gap:0">
-              <div class="scoop green" style="width:108px;height:100px;font-size:12px">Fıstık</div>
-              <div class="cone"></div>
-            </div>
-            <div class="product-info">
-              <h3>Antep Fıstıklı</h3>
-              <p>Özel kavrulmuş fıstık, yoğun aroma — her kaşıkta Güneydoğu.</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- PANEL 4 — Trileçe -->
-      <div class="h-panel" data-index="3" data-color="warm">
-        <div class="product-drop">
-          <div class="product-fig">
-            <div style="display:flex;flex-direction:column;align-items:center;gap:4px">
-              <div style="
-                width:120px;height:48px;
-                background:linear-gradient(135deg,#f5d4b0 20%,#fae8ce 100%);
-                border-radius:6px 6px 2px 2px;
-                box-shadow:0 4px 14px #f5d4b044;
-              "></div>
-              <div style="
-                width:120px;height:10px;
-                background:#e8a040;
-                border-radius:2px;
-                box-shadow:0 2px 8px #e8a04044;
-              "></div>
-              <div style="
-                width:120px;height:48px;
-                background:linear-gradient(135deg,#f5d4b0 20%,#fae8ce 100%);
-                border-radius:2px 2px 6px 6px;
-                box-shadow:0 4px 14px #f5d4b044;
-              "></div>
-            </div>
-            <div class="product-info">
-              <h3>Trileçe</h3>
-              <p>Üç sütlü İtalyan tatlısı, hafif ve kremsi — her dilimde biraz daha mutluluk.</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- PANEL 5 — Tiramisu -->
-      <div class="h-panel" data-index="4" data-color="warm">
-        <div class="product-drop">
-          <div class="product-fig">
-            <div style="display:flex;flex-direction:column;align-items:center;gap:4px">
-              <div style="
-                width:120px;height:20px;
-                background:#3d2a1a;
-                border-radius:4px 4px 0 0;
-              "></div>
-              <div style="
-                width:120px;height:32px;
-                background:#f0dcc0;
-                border-radius:0;
-              "></div>
-              <div style="
-                width:120px;height:20px;
-                background:#3d2a1a;
-                border-radius:0;
-              "></div>
-              <div style="
-                width:120px;height:32px;
-                background:#f0dcc0;
-                border-radius:0 0 4px 4px;
-              "></div>
-            </div>
-            <div class="product-info">
-              <h3>Tiramisu</h3>
-              <p>Kahveli, maskarponeli İtalyan klasiği — bir lokmada Venedik'e yolculuk.</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- PANEL 6 — Klasik Waffle -->
-      <div class="h-panel" data-index="5" data-color="warm">
-        <div class="product-drop">
-          <div class="product-fig">
-            <div style="display:flex;flex-direction:column;align-items:center;gap:8px">
-              <div class="scoop pink" style="width:64px;height:60px;font-size:8px">+1</div>
-              <div style="
-                width:100px;height:72px;
-                background:linear-gradient(135deg,#d4a868 20%,#e8c080 100%);
-                border-radius:6px;
-                display:grid;
-                grid-template-columns:1fr 1fr 1fr;
-                grid-template-rows:1fr 1fr 1fr;
-                gap:2px;
-                padding:4px;
-              ">
-                <div style="background:#c49a58;border-radius:2px"></div>
-                <div style="background:#c49a58;border-radius:2px"></div>
-                <div style="background:#c49a58;border-radius:2px"></div>
-                <div style="background:#c49a58;border-radius:2px"></div>
-                <div style="background:#c49a58;border-radius:2px"></div>
-                <div style="background:#c49a58;border-radius:2px"></div>
-                <div style="background:#c49a58;border-radius:2px"></div>
-                <div style="background:#c49a58;border-radius:2px"></div>
-                <div style="background:#c49a58;border-radius:2px"></div>
-              </div>
-            </div>
-            <div class="product-info">
-              <h3>Klasik Waffle</h3>
-              <p>Çikolata soslu, çıtır hamur, üstüne bir top dondurma — efsane ikili.</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-    </div><!-- /h-track -->
-
-    <!-- step counter -->
-    <div class="step-counter" id="stepCounter">
-      <span class="step-dot active"></span>
-      <span class="step-dot"></span>
-      <span class="step-dot"></span>
-      <span class="step-dot"></span>
-      <span class="step-dot"></span>
-      <span class="step-dot"></span>
-      <span class="step-label">6 lezzet</span>
+  <!-- DONDURMA -->
+  <section class="picnic-dish picnic-dish--dondurma">
+    <div class="dish-header">
+      <span class="dish-icon" aria-hidden="true">🍨</span>
+      <h2>Dondurma <small>Doğal lezzetler</small></h2>
     </div>
-  </div><!-- /h-sticky -->
-</div><!-- /h-wrap -->
+    <div class="dish-items">
+      <div class="dish-card" data-reveal>
+        <span class="card-emoji" aria-hidden="true">🍦</span>
+        <div class="card-text">
+          <strong>Külahta Dondurma</strong>
+          <span>Sade, çikolatalı, çilekli, antep fıstıklı</span>
+        </div>
+        <span class="card-price">40₺</span>
+      </div>
+      <div class="dish-card" data-reveal>
+        <span class="card-emoji" aria-hidden="true">🍨</span>
+        <div class="card-text">
+          <strong>Magnolia Kup</strong>
+          <span>Çilekli, çikolatalı, muzlu, orman meyveli</span>
+        </div>
+        <span class="card-price">75₺</span>
+      </div>
+      <div class="dish-card" data-reveal>
+        <span class="card-emoji" aria-hidden="true">🥛</span>
+        <div class="card-text">
+          <strong>Dondurma Kasası</strong>
+          <span>500 gr — ev usulü, günlük</span>
+        </div>
+        <span class="card-price">120₺</span>
+      </div>
+    </div>
+  </section>
 
-<!-- ═══════════════════════════════════════════════════ -->
-<!--  CONTACT                                           -->
-<!-- ═══════════════════════════════════════════════════ -->
-<section class="contact" id="contact">
-  <div class="contact-card">
-    <h2>Bize Ulaşın</h2>
-    <p class="sub">Mimaroba'da sizi bekliyoruz — gelin, bir dondurma da bizden olsun.</p>
-    <div class="contact-row">
-      <i class="ph ph-map-pin"></i>
-      <span>Mimaroba, Büyükçekmece / İstanbul</span>
+  <!-- PASTANE -->
+  <section class="picnic-dish picnic-dish--pastane">
+    <div class="dish-header">
+      <span class="dish-icon" aria-hidden="true">🍰</span>
+      <h2>Pastane <small>Her gün taze</small></h2>
     </div>
-    <div class="contact-row">
-      <i class="ph ph-clock"></i>
-      <span>Her gün 09:00 – 23:00</span>
+    <div class="dish-items">
+      <div class="dish-card" data-reveal>
+        <span class="card-emoji" aria-hidden="true">🍮</span>
+        <div class="card-text">
+          <strong>San Sebastian</strong>
+          <span>Yanık cheesecake, içi akışkan</span>
+        </div>
+        <span class="card-price">95₺</span>
+      </div>
+      <div class="dish-card" data-reveal>
+        <span class="card-emoji" aria-hidden="true">🤎</span>
+        <div class="card-text">
+          <strong>Profiterol</strong>
+          <span>20 adet, bol çikolata soslu</span>
+        </div>
+        <span class="card-price">85₺</span>
+      </div>
+      <div class="dish-card" data-reveal>
+        <span class="card-emoji" aria-hidden="true">🍫</span>
+        <div class="card-text">
+          <strong>Islak Brownie</strong>
+          <span>Fındıklı, dondurma ile servis</span>
+        </div>
+        <span class="card-price">75₺</span>
+      </div>
     </div>
-    <a href="https://www.instagram.com/dora_dondurma/" target="_blank" rel="noopener" class="contact-insta">
-      <i class="ph ph-instagram-logo"></i> @dora_dondurma
-    </a>
+  </section>
 
-    <div class="map-deco">
-      <div class="map-dot"></div>
-      <span class="map-label">Mimaroba</span>
-      <div class="map-street"></div>
-      <div class="map-street"></div>
+  <!-- İÇECEKLER -->
+  <section class="picnic-dish picnic-dish--icecek">
+    <div class="dish-header">
+      <span class="dish-icon" aria-hidden="true">🥤</span>
+      <h2>İçecekler <small>Serinleten lezzetler</small></h2>
     </div>
-  </div>
-  <div class="contact-foot">
-    Dora Dondurma &amp; Patisserie · @dora_dondurma
-  </div>
-</section>
+    <div class="dish-items">
+      <div class="dish-card" data-reveal>
+        <span class="card-emoji" aria-hidden="true">🍓</span>
+        <div class="card-text">
+          <strong>Dragon Shake</strong>
+          <span>Pembe ejder meyveli, muzlu, sütlü</span>
+        </div>
+        <span class="card-price">95₺</span>
+      </div>
+      <div class="dish-card" data-reveal>
+        <span class="card-emoji" aria-hidden="true">🖤</span>
+        <div class="card-text">
+          <strong>Dora Dark Frost</strong>
+          <span>Çikolatalı soğuk içecek, kremalı</span>
+        </div>
+        <span class="card-price">85₺</span>
+      </div>
+      <div class="dish-card" data-reveal>
+        <span class="card-emoji" aria-hidden="true">🍹</span>
+        <div class="card-text">
+          <strong>Çilekli Milkshake</strong>
+          <span>Taze çilek, dondurma, süt</span>
+        </div>
+        <span class="card-price">80₺</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- WAFFLE -->
+  <section class="picnic-dish picnic-dish--waffle">
+    <div class="dish-header">
+      <span class="dish-icon" aria-hidden="true">🧇</span>
+      <h2>Waffle <small>Çıtır çıtır, bol soslu</small></h2>
+    </div>
+    <div class="dish-items">
+      <div class="dish-card" data-reveal>
+        <span class="card-emoji" aria-hidden="true">🧇</span>
+        <div class="card-text">
+          <strong>Anka Kova Waffle</strong>
+          <span>Kova şeklinde waffle, dondurma bol malzeme</span>
+        </div>
+        <span class="card-price">110₺</span>
+      </div>
+      <div class="dish-card" data-reveal>
+        <span class="card-emoji" aria-hidden="true">🏆</span>
+        <div class="card-text">
+          <strong>Artemis Waffle Cup</strong>
+          <span>Kup içinde waffle, katmanlı sunum</span>
+        </div>
+        <span class="card-price">120₺</span>
+      </div>
+      <div class="dish-card" data-reveal>
+        <span class="card-emoji" aria-hidden="true">🍌</span>
+        <div class="card-text">
+          <strong>Karışık Waffle</strong>
+          <span>Muz, çilek, çikolata, fındık, dondurma</span>
+        </div>
+        <span class="card-price">95₺</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT — Pinned Note -->
+  <section class="pinned-note">
+    <div class="pushpin" aria-hidden="true">📌</div>
+    <div class="note-body">
+      <h3>Bizi bulun 🌸</h3>
+      <div class="note-row">
+        <span class="note-icon"><i class="ph ph-map-pin"></i></span>
+        <p>
+          Ekinoba Mah. Hürriyet Cad. No:41/2D<br />
+          <small>Mimaroba, Büyükçekmece / İSTANBUL</small>
+        </p>
+      </div>
+      <div class="note-row">
+        <span class="note-icon"><i class="ph ph-clock"></i></span>
+        <p>13:00 — 02:00 <small>her gün</small></p>
+      </div>
+      <div class="note-row">
+        <span class="note-icon"><i class="ph ph-phone"></i></span>
+        <p>0533 460 03 05</p>
+      </div>
+      <div class="note-maps">
+        <a href="https://maps.app.goo.gl/zbYJJw6AQ8FRUeo96" target="_blank" rel="noopener">
+          <i class="ph ph-arrow-square-out"></i> Google Maps'te aç
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="blanket-footer">
+    <p>Dora Dondurma &amp; Patisserie · Mimaroba</p>
+    <p style="margin-top:4px;">
+      <a href="https://www.instagram.com/dora_dondurma" target="_blank" rel="noopener">
+        <i class="ph ph-instagram-logo"></i> @dora_dondurma
+      </a>
+    </p>
+    <p style="margin-top:14px; color:#c5b5a8;">
+      Showcase demo by <a href="https://blok-web-studio.netlify.app" target="_blank" rel="noopener">BLOK.</a>
+    </p>
+    <p style="font-size:0.72rem; color:#d5c5b8;">
+      Fictional brand concept · Real web design demo
+    </p>
+  </footer>
+
+</main>
+
+<!-- ══ DEMO BADGE ══ -->
+<div class="demo-badge" id="demo-badge">
+  <div class="demo-label">Demo Site</div>
+  <strong>Dora Dondurma &amp; Patisserie</strong><br />
+  Concept by <a href="https://blok-web-studio.netlify.app" target="_blank" rel="noopener">BLOK. WebDev Studio</a>
+</div>
 
 <script>
 (function() {
-  // ─── hero frost particles ──
-  const frost = document.getElementById('heroFrost');
-  if (frost) {
-    for (let i = 0; i < 24; i++) {
-      const p = document.createElement('span');
-      p.className = 'pf';
-      p.style.cssText = `
-        left: ${Math.random() * 96 + 2}%;
-        top: ${Math.random() * 94 + 3}%;
-        width: ${Math.random() * 5 + 3}px;
-        height: ${Math.random() * 5 + 3}px;
-        opacity: ${Math.random() * 0.1 + 0.05};
-      `;
-      frost.appendChild(p);
-    }
+  'use strict';
+
+  // ── scroll reveal ──
+  const cards = document.querySelectorAll('[data-reveal]');
+  if (cards.length && 'IntersectionObserver' in window) {
+    const obs = new IntersectionObserver(function(entries) {
+      entries.forEach(function(e) {
+        if (e.isIntersecting) {
+          e.target.classList.add('revealed');
+          obs.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.2, rootMargin: '0px 0px -40px 0px' });
+    cards.forEach(function(c) { obs.observe(c); });
+  } else {
+    cards.forEach(function(c) { c.classList.add('revealed'); });
   }
 
-  // ─── horizontal scroll setup ──
-  const wrap = document.getElementById('hWrap');
-  const sticky = document.getElementById('hSticky');
-  const track = document.getElementById('hTrack');
-  const panels = track.querySelectorAll('.h-panel');
-  const dots = document.querySelectorAll('.step-dot');
-  const count = panels.length;
+  // ── demo badge reveal ──
+  setTimeout(function() {
+    var badge = document.getElementById('demo-badge');
+    if (badge) badge.classList.add('visible');
+  }, 1200);
 
-  // create spacer
-  const spacer = document.createElement('div');
-  spacer.className = 'h-spacer';
-  spacer.style.height = (count * 100) + 'vh';
-  wrap.insertBefore(spacer, sticky);
-
-  let ticking = false;
-  let lastActive = -1;
-
-  function onScroll() {
-    const rect = wrap.getBoundingClientRect();
-    const wrapTop = wrap.offsetTop;
-    const viewH = window.innerHeight;
-    const scrollY = window.scrollY;
-    const totalScroll = (count * viewH) - viewH;
-
-    // progress within the horizontal section
-    let progress = (scrollY - wrapTop) / totalScroll;
-    progress = Math.max(0, Math.min(1, progress));
-
-    // translate track
-    const trackWidth = track.scrollWidth;
-    const visibleWidth = window.innerWidth;
-    const maxTranslate = trackWidth - visibleWidth;
-    const tx = -progress * maxTranslate;
-    track.style.transform = 'translateX(' + tx + 'px)';
-
-    // determine active panel
-    const activeIdx = Math.round(progress * (count - 1));
-    if (activeIdx !== lastActive) {
-      lastActive = activeIdx;
-      panels.forEach((p, i) => {
-        p.classList.toggle('active', i === activeIdx || i === activeIdx - 1);
-      });
-      dots.forEach((d, i) => {
-        d.classList.toggle('active', i <= activeIdx);
-      });
-    }
+  // ── iframe detection ──
+  var inIframe = false;
+  try { inIframe = window.self !== window.top; }
+  catch(e) { inIframe = true; }
+  if (inIframe) {
+    var badge = document.getElementById('demo-badge');
+    if (badge) badge.remove();
   }
-
-  window.addEventListener('scroll', function() {
-    if (!ticking) {
-      window.requestAnimationFrame(function() {
-        onScroll();
-        ticking = false;
-      });
-      ticking = true;
-    }
-  }, { passive: true });
-
-  // initial state
-  onScroll();
-
-  // ─── handle resize ──
-  let resizeTimer;
-  window.addEventListener('resize', function() {
-    clearTimeout(resizeTimer);
-    resizeTimer = setTimeout(onScroll, 100);
-  });
-
-  // ─── contact fade-in ──
-  const contactSection = document.getElementById('contact');
-  const contactObs = new IntersectionObserver(function(entries) {
-    entries.forEach(function(e) {
-      if (e.isIntersecting) {
-        e.target.style.opacity = '1';
-        e.target.style.transform = 'translateY(0)';
-        contactObs.unobserve(e.target);
-      }
-    });
-  }, { threshold: 0.15 });
-  contactSection.style.opacity = '0';
-  contactSection.style.transform = 'translateY(20px)';
-  contactSection.style.transition = 'opacity 0.7s ease, transform 0.7s ease';
-  contactObs.observe(contactSection);
-
 })();
 </script>
 </body>
