@@ -41,7 +41,7 @@
       min-height: 100vh;
       display: flex;
       align-items: center;
-      padding: 100px 32px 100px;
+      padding: 60px 32px 100px;
       background: #faf5ef;
       overflow: hidden;
     }
@@ -150,48 +150,85 @@
       transform: translateX(4px);
     }
 
-    /* ── navbar ── */
-    .navbar {
+    /* ── dock ── */
+    .dock {
       position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
+      bottom: 28px;
+      left: 50%;
+      transform: translateX(-50%);
       z-index: 100;
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      padding: 16px 32px;
-      background: linear-gradient(180deg, rgba(232,213,204,0.85) 0%, rgba(232,213,204,0) 100%);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-      pointer-events: none;
+      gap: 2px;
+      padding: 8px 10px;
+      background: rgba(250,245,239,0.82);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid rgba(232,213,204,0.5);
+      border-radius: 100px;
+      box-shadow: 0 4px 28px rgba(34,26,21,0.07);
+      user-select: none;
+      opacity: 0;
+      transform-origin: center;
     }
-    .navbar a {
-      pointer-events: auto;
+    body.loaded .dock {
+      animation: dock-in 0.5s cubic-bezier(0.22,1,0.36,1) 1.4s both;
+    }
+    @keyframes dock-in {
+      0% { opacity: 0; transform: translateX(-50%) translateY(12px) scale(0.95); }
+      100% { opacity: 1; transform: translateX(-50%) translateY(0) scale(1); }
+    }
+    .dock-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      border-radius: 40px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.82rem;
+      font-weight: 500;
+      color: #7a6a5a;
       text-decoration: none;
+      transition: all 0.2s ease;
+      cursor: pointer;
+      background: transparent;
+      border: none;
+      white-space: nowrap;
     }
-    .navbar-logo {
+    .dock-item:hover {
+      background: rgba(194,101,74,0.08);
+      color: #c2654a;
+    }
+    .dock-item:active {
+      transform: scale(0.95);
+    }
+    .dock-divider {
+      width: 1px;
+      height: 20px;
+      background: rgba(232,213,204,0.6);
+      margin: 0 4px;
+      flex-shrink: 0;
+    }
+    .dock-logo {
       font-family: 'Fraunces', serif;
-      font-size: 1.25rem;
+      font-size: 1rem;
       font-weight: 500;
       font-variation-settings: 'SOFT' 85;
       color: #221a15;
       letter-spacing: -0.02em;
+      padding: 6px 16px 6px 12px;
+      cursor: default;
     }
-    .navbar-social {
-      display: flex;
+    .dock-icon {
+      font-size: 1.15rem;
+      display: inline-flex;
       align-items: center;
-      gap: 6px;
-      font-family: 'DM Sans', sans-serif;
-      font-size: 0.85rem;
-      color: #7a6a5a;
-      transition: color 0.2s;
+      justify-content: center;
+      padding: 6px 10px;
     }
-    .navbar-social:hover {
+    .dock-icon:hover {
+      background: rgba(194,101,74,0.08);
       color: #c2654a;
-    }
-    .navbar-social i {
-      font-size: 1.1rem;
     }
 
     /* ── startup animation ── */
@@ -319,7 +356,7 @@
     .content {
       max-width: 1200px;
       margin: 0 auto;
-      padding: 0 32px 80px;
+      padding: 0 32px 120px;
       opacity: 0;
       transition: opacity 0.8s ease;
     }
@@ -580,7 +617,7 @@
 
     /* ── responsive ── */
     @media (max-width: 768px) {
-      .hero { min-height: 100vh; padding: 80px 20px 80px; }
+      .hero { min-height: 100vh; padding: 48px 20px 80px; }
       .hero-inner { grid-template-columns: 1fr; gap: 32px; }
       .hero-text { max-width: none; }
       .hero-title { font-size: clamp(2.6rem, 12vw, 3.8rem); }
@@ -588,7 +625,7 @@
       .hero-blob { width: 200px; height: 200px; }
       .hero-cta { width: 100%; justify-content: center; }
 
-      .content { padding: 0 20px 60px; }
+      .content { padding: 0 20px 100px; }
       .section-header { padding-top: 40px; }
       .section-header h2 { font-size: 1.3rem; }
 
@@ -609,16 +646,49 @@
         text-align: center;
         padding: 20px;
       }
+      .dock {
+        bottom: 16px;
+        padding: 6px 8px;
+        gap: 1px;
+        max-width: calc(100vw - 24px);
+        border-radius: 60px;
+      }
+      .dock-item {
+        font-size: 0.75rem;
+        padding: 5px 10px;
+      }
+      .dock-logo {
+        font-size: 0.85rem;
+        padding: 5px 12px 5px 8px;
+      }
+      .dock-icon {
+        padding: 5px 8px;
+        font-size: 1rem;
+      }
+      .dock-divider {
+        margin: 0 2px;
+      }
     }
   </style>
 </head>
 <body>
 
-<!-- ══ NAVBAR ══ -->
-<nav class="navbar">
-  <span class="navbar-logo">Dora</span>
-  <a class="navbar-social" href="https://www.instagram.com/dora_dondurma" target="_blank" rel="noopener">
-    <i class="ph ph-instagram-logo"></i> @dora_dondurma
+<!-- ══ DOCK ══ -->
+<nav class="dock" id="dock">
+  <span class="dock-item dock-logo">Dora</span>
+  <div class="dock-divider"></div>
+  <button class="dock-item" data-scroll="menu">
+    <i class="ph ph-bowl-food"></i> Men&uuml;
+  </button>
+  <button class="dock-item" data-scroll="contact">
+    <i class="ph ph-phone"></i> İletişim
+  </button>
+  <div class="dock-divider"></div>
+  <a class="dock-item dock-icon" href="https://www.instagram.com/dora_dondurma" target="_blank" rel="noopener" aria-label="Instagram">
+    <i class="ph ph-instagram-logo"></i>
+  </a>
+  <a class="dock-item dock-icon" href="https://maps.app.goo.gl/zbYJJw6AQ8FRUeo96" target="_blank" rel="noopener" aria-label="Google Maps">
+    <i class="ph ph-map-trifold"></i>
   </a>
 </nav>
 
@@ -659,7 +729,7 @@
 <main class="content">
 
   <!-- ── DONDURMA ── -->
-  <section class="reveal">
+  <section class="reveal" id="menu">
     <div class="section-header">
       <h2>Dondurma</h2>
       <span></span>
@@ -794,7 +864,7 @@
   </section>
 
   <!-- ── CONTACT ── -->
-  <section class="contact-section reveal">
+  <section class="contact-section reveal" id="contact">
     <div>
       <h2>Bizi bulun</h2>
       <div class="contact-items">
@@ -940,6 +1010,16 @@
       }
     });
   }
+  /* ═══════════════════════════════
+     4. DOCK SCROLL
+     ═══════════════════════════════ */
+  var dockBtns = document.querySelectorAll('.dock-item[data-scroll]');
+  dockBtns.forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var target = document.getElementById(btn.getAttribute('data-scroll'));
+      if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
 })();
 </script>
 </body>
