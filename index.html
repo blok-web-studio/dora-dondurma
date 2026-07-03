@@ -196,7 +196,7 @@
       outline: none;
       color: #7a6a5a;
       text-decoration: none;
-      transition: all 0.2s ease;
+      transition: background 0.35s cubic-bezier(0.22,1,0.36,1), color 0.35s cubic-bezier(0.22,1,0.36,1), transform 0.15s ease;
       cursor: pointer;
       background: transparent;
       border: none;
@@ -812,7 +812,7 @@
   </section>
 
   <!-- ── PASTANE ── -->
-  <section class="reveal">
+  <section class="reveal" id="pastane">
     <div class="section-header">
       <h2>Pastane</h2>
       <span></span>
@@ -851,7 +851,7 @@
   </section>
 
   <!-- ── İÇECEKLER ── -->
-  <section class="reveal">
+  <section class="reveal" id="icecekler">
     <div class="section-header">
       <h2>İ&ccedil;ecekler</h2>
       <span></span>
@@ -883,7 +883,7 @@
   </section>
 
   <!-- ── WAFFLE ── -->
-  <section class="reveal">
+  <section class="reveal" id="waffle">
     <div class="section-header">
       <h2>Waffle</h2>
       <span></span>
@@ -1034,10 +1034,10 @@
 
 
   /* ═══════════════════════════════
-     3. DOCK SCROLL
+     3. DOCK & CTA SCROLL
      ═══════════════════════════════ */
-  var dockBtns = document.querySelectorAll('.dock-item[data-scroll]');
-  dockBtns.forEach(function(btn) {
+  var scrollBtns = document.querySelectorAll('[data-scroll]');
+  scrollBtns.forEach(function(btn) {
     btn.addEventListener('click', function() {
       var target = document.getElementById(btn.getAttribute('data-scroll'));
       if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -1045,24 +1045,46 @@
   });
 
   /* ═══════════════════════════════
-     4. DOCK ACTIVE SECTION
+     4. DOCK ACTIVE SECTION (with menu group)
      ═══════════════════════════════ */
   var dockItems = document.querySelectorAll('.dock-item[data-scroll]');
   var dockSections = [];
+  var menuGroupIds = ['menu', 'pastane', 'icecekler', 'waffle'];
+  var menuBtn = document.querySelector('.dock-item[data-scroll="menu"]');
+  var menuVisibleCount = 0;
+
   dockItems.forEach(function(item) {
     var id = item.getAttribute('data-scroll');
-    var el = document.getElementById(id);
-    if (el) dockSections.push({ el: el, btn: item });
+    if (id === 'menu') {
+      menuGroupIds.forEach(function(mid) {
+        var el = document.getElementById(mid);
+        if (el) dockSections.push({ el: el, btn: item, group: 'menu' });
+      });
+    } else {
+      var el = document.getElementById(id);
+      if (el) dockSections.push({ el: el, btn: item });
+    }
   });
+
   if (dockSections.length && 'IntersectionObserver' in window) {
     var dockObs = new IntersectionObserver(function(entries) {
       entries.forEach(function(e) {
         var match = dockSections.find(function(s) { return s.el === e.target; });
         if (!match) return;
-        if (e.isIntersecting) {
-          match.btn.classList.add('active');
+
+        if (match.group === 'menu') {
+          if (e.isIntersecting) {
+            menuVisibleCount++;
+          } else {
+            menuVisibleCount--;
+          }
+          menuBtn.classList.toggle('active', menuVisibleCount > 0);
         } else {
-          match.btn.classList.remove('active');
+          if (e.isIntersecting) {
+            match.btn.classList.add('active');
+          } else {
+            match.btn.classList.remove('active');
+          }
         }
       });
     }, { threshold: 0, rootMargin: '-40% 0px -40% 0px' });
