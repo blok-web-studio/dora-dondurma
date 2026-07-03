@@ -333,17 +333,19 @@
     .hero-blob {
       width: 380px;
       height: 380px;
-      border-radius: 38% 62% 42% 58% / 52% 42% 58% 48%;
+      border-radius: 34% 66% 40% 60% / 54% 40% 60% 46%;
       background: linear-gradient(135deg, #e8d5cc 0%, #d4b5a8 40%, #c2654a 100%);
       opacity: 0.7;
-      animation: blob-morph 12s ease-in-out infinite;
-      filter: blur(2px);
-      will-change: transform;
+      animation: blob-morph 6s ease-in-out infinite;
+      filter: blur(1px);
+      will-change: transform, border-radius;
+      transition: transform 0.12s cubic-bezier(0.22, 1, 0.36, 1);
     }
     @keyframes blob-morph {
-      0%, 100% { border-radius: 38% 62% 42% 58% / 52% 42% 58% 48%; }
-      33% { border-radius: 48% 52% 58% 42% / 38% 58% 42% 62%; }
-      66% { border-radius: 52% 48% 38% 62% / 48% 52% 48% 52%; }
+      0%, 100% { border-radius: 34% 66% 40% 60% / 54% 40% 60% 46%; }
+      25% { border-radius: 50% 50% 60% 40% / 40% 60% 40% 60%; }
+      50% { border-radius: 60% 40% 44% 56% / 52% 50% 50% 48%; }
+      75% { border-radius: 40% 60% 60% 40% / 60% 44% 56% 40%; }
     }
     .hero-blob-2 {
       position: absolute;
@@ -630,8 +632,14 @@
       .hero-inner { grid-template-columns: 1fr; gap: 32px; }
       .hero-text { max-width: none; }
       .hero-title { font-size: clamp(2.6rem, 12vw, 3.8rem); }
-      .hero-visual { display: flex; justify-content: center; align-items: center; min-height: 180px; }
-      .hero-blob { width: 180px; height: 180px; }
+      .hero-visual { display: none; }
+      .hero::before {
+        top: auto; right: auto;
+        left: 50%; top: 50%;
+        transform: translate(-50%, -50%);
+        width: 100%; height: 100%;
+        background: radial-gradient(ellipse at center, rgba(194,101,74,0.12) 0%, rgba(250,245,239,0) 70%);
+      }
       .hero-cta { width: 100%; justify-content: center; }
 
       .content { padding: 0 20px 100px; }
@@ -936,30 +944,17 @@
   });
 
   /* ═══════════════════════════════
-     1. MOUSE-REACTIVE BLOB (smooth lerp)
+     1. MOUSE-REACTIVE BLOB (CSS-transition smoothed)
      ═══════════════════════════════ */
   var blob = document.getElementById('hero-blob');
   var heroEl = document.querySelector('.hero');
   if (blob && heroEl) {
-    var blobTx = 0, blobTy = 0, blobCx = 0, blobCy = 0, blobRaf = null;
-    function tickBlob() {
-      blobCx += (blobTx - blobCx) * 0.1;
-      blobCy += (blobTy - blobCy) * 0.1;
-      blob.style.transform = 'translate(' + blobCx.toFixed(3) + 'px, ' + blobCy.toFixed(3) + 'px)';
-      if (Math.abs(blobCx - blobTx) > 0.01 || Math.abs(blobCy - blobTy) > 0.01) {
-        blobRaf = requestAnimationFrame(tickBlob);
-      } else { blobRaf = null; }
-    }
-    function startBlobRaf() { if (!blobRaf) blobRaf = requestAnimationFrame(tickBlob); }
     heroEl.addEventListener('mousemove', function(e) {
       var r = heroEl.getBoundingClientRect();
-      blobTx = ((e.clientX - r.left) / r.width - 0.5) * 40;
-      blobTy = ((e.clientY - r.top) / r.height - 0.5) * 40;
-      startBlobRaf();
+      blob.style.transform = 'translate(' + (((e.clientX - r.left) / r.width - 0.5) * 40) + 'px, ' + (((e.clientY - r.top) / r.height - 0.5) * 40) + 'px)';
     });
     heroEl.addEventListener('mouseleave', function() {
-      blobTx = 0; blobTy = 0;
-      startBlobRaf();
+      blob.style.transform = 'translate(0, 0)';
     });
   }
 
