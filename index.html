@@ -490,41 +490,6 @@
       transform: translateY(0);
     }
 
-    /* ── demo badge ── */
-    .demo-badge {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      max-width: 300px;
-      background: rgba(250,245,239,0.92);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      border: 1px solid rgba(229,221,212,0.5);
-      border-radius: 16px;
-      padding: 10px 16px;
-      box-shadow: 0 4px 16px rgba(0,0,0,0.06);
-      font-size: 0.78rem;
-      line-height: 1.45;
-      z-index: 100;
-      transform: translateY(150%);
-      transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
-      color: #5a4a3a;
-    }
-    .demo-badge.visible { transform: translateY(0); }
-    .demo-badge .demo-label {
-      font-size: 0.62rem;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: #b5a598;
-      margin-bottom: 1px;
-    }
-    .demo-badge strong { color: #c2654a; }
-    .demo-badge a {
-      color: #c2654a;
-      text-decoration: underline;
-      text-underline-offset: 2px;
-    }
-
     /* ── responsive ── */
     @media (max-width: 768px) {
       .hero { min-height: 100vh; padding: 48px 20px 80px; }
@@ -555,13 +520,6 @@
         gap: 8px;
         text-align: center;
         padding: 20px;
-      }
-      .demo-badge {
-        right: 10px;
-        bottom: 12px;
-        left: 10px;
-        max-width: none;
-        text-align: center;
       }
     }
   </style>
@@ -789,15 +747,8 @@
 <!-- ══ FOOTER ══ -->
 <footer class="footer">
   <p>Dora Dondurma &amp; Patisserie &middot; Mimaroba</p>
-  <p>Showcase demo by <a href="https://blok-web-studio.netlify.app" target="_blank" rel="noopener">BLOK.</a></p>
+  <p>Site by <a href="https://blok-web-studio.netlify.app" target="_blank" rel="noopener">BLOK.</a></p>
 </footer>
-
-<!-- ══ DEMO BADGE ══ -->
-<div class="demo-badge" id="demo-badge">
-  <div class="demo-label">Demo Site</div>
-  <strong>Dora Dondurma &amp; Patisserie</strong><br />
-  Concept by <a href="https://blok-web-studio.netlify.app" target="_blank" rel="noopener">BLOK. WebDev Studio</a>
-</div>
 
 <script>
 (function() {
@@ -886,23 +837,6 @@
         ticking = true;
       }
     });
-  }
-
-  /* ═══════════════════════════════
-     4. DEMO BADGE
-     ═══════════════════════════════ */
-  setTimeout(function() {
-    var badge = document.getElementById('demo-badge');
-    if (badge) badge.classList.add('visible');
-  }, 1200);
-
-  // ── iframe detection ──
-  var inIframe = false;
-  try { inIframe = window.self !== window.top; }
-  catch(e) { inIframe = true; }
-  if (inIframe) {
-    var badge = document.getElementById('demo-badge');
-    if (badge) badge.remove();
   }
 })();
 </script>
