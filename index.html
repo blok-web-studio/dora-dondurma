@@ -292,19 +292,20 @@
     .hero-blob {
       width: 380px;
       height: 380px;
-      border-radius: 34% 66% 40% 60% / 54% 40% 60% 46%;
+      border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
       background: linear-gradient(135deg, #e8d5cc 0%, #d4b5a8 40%, #c2654a 100%);
       opacity: 0.7;
       animation: blob-morph 6s ease-in-out infinite;
       filter: blur(1px);
       will-change: transform, border-radius;
-      transition: transform 0.12s cubic-bezier(0.22, 1, 0.36, 1);
     }
     @keyframes blob-morph {
-      0%, 100% { border-radius: 34% 66% 40% 60% / 54% 40% 60% 46%; }
-      25% { border-radius: 50% 50% 60% 40% / 40% 60% 40% 60%; }
-      50% { border-radius: 60% 40% 44% 56% / 52% 50% 50% 48%; }
-      75% { border-radius: 40% 60% 60% 40% / 60% 44% 56% 40%; }
+      0%, 100% { border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%; transform: scale(1); }
+      20% { border-radius: 18% 82% 28% 72% / 66% 22% 78% 34%; transform: scale(1.08); }
+      40% { border-radius: 62% 38% 72% 28% / 38% 64% 36% 62%; transform: scale(0.95); }
+      55% { border-radius: 75% 25% 55% 45% / 28% 68% 32% 72%; transform: scale(1.05); }
+      70% { border-radius: 38% 62% 22% 78% / 56% 32% 68% 44%; transform: scale(0.97); }
+      85% { border-radius: 22% 78% 68% 32% / 72% 40% 60% 28%; transform: scale(1.03); }
     }
     .hero-blob-2 {
       position: absolute;
@@ -319,6 +320,16 @@
     @keyframes blob-float {
       0%, 100% { transform: translate(0, 0) scale(1); }
       50% { transform: translate(-15px, -15px) scale(1.05); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .hero-blob {
+        animation: none;
+        border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+      }
+      .hero-blob-2 {
+        animation: none;
+      }
     }
 
     /* ── main content ── */
@@ -978,18 +989,40 @@
   });
 
   /* ═══════════════════════════════
-     1. MOUSE-REACTIVE BLOB (CSS-transition smoothed)
+     1. MOUSE-REACTIVE BLOB (Lerp-smoothed rAF)
      ═══════════════════════════════ */
   var blob = document.getElementById('hero-blob');
   var heroEl = document.querySelector('.hero');
   if (blob && heroEl) {
+    var targetX = 0;
+    var targetY = 0;
+    var currentX = 0;
+    var currentY = 0;
+    var ease = 0.08; // Smoothness factor (lower = smoother/slower)
+
     heroEl.addEventListener('mousemove', function(e) {
       var r = heroEl.getBoundingClientRect();
-      blob.style.transform = 'translate(' + (((e.clientX - r.left) / r.width - 0.5) * 40) + 'px, ' + (((e.clientY - r.top) / r.height - 0.5) * 40) + 'px)';
+      // Max movement of 70px in any direction
+      targetX = ((e.clientX - r.left) / r.width - 0.5) * 140;
+      targetY = ((e.clientY - r.top) / r.height - 0.5) * 140;
     });
+
     heroEl.addEventListener('mouseleave', function() {
-      blob.style.transform = 'translate(0, 0)';
+      targetX = 0;
+      targetY = 0;
     });
+
+    function updateBlob() {
+      // Interpolate current position towards target
+      currentX += (targetX - currentX) * ease;
+      currentY += (targetY - currentY) * ease;
+
+      // Apply transform with 3D for hardware acceleration
+      blob.style.transform = 'translate3d(' + currentX.toFixed(2) + 'px, ' + currentY.toFixed(2) + 'px, 0)';
+
+      requestAnimationFrame(updateBlob);
+    }
+    requestAnimationFrame(updateBlob);
   }
 
   /* ═══════════════════════════════
@@ -1045,51 +1078,67 @@
   });
 
   /* ═══════════════════════════════
-     4. DOCK ACTIVE SECTION (with menu group)
+     4. DOCK ACTIVE SECTION — scroll-based position tracking
      ═══════════════════════════════ */
   var dockItems = document.querySelectorAll('.dock-item[data-scroll]');
-  var dockSections = [];
   var menuGroupIds = ['menu', 'pastane', 'icecekler', 'waffle'];
   var menuBtn = document.querySelector('.dock-item[data-scroll="menu"]');
-  var menuVisibleCount = 0;
+  var dockTargets = [];
 
   dockItems.forEach(function(item) {
     var id = item.getAttribute('data-scroll');
     if (id === 'menu') {
+      var menuEls = [];
       menuGroupIds.forEach(function(mid) {
         var el = document.getElementById(mid);
-        if (el) dockSections.push({ el: el, btn: item, group: 'menu' });
+        if (el) menuEls.push(el);
       });
+      dockTargets.push({ id: 'menu', btn: item, group: 'menu', els: menuEls });
     } else {
       var el = document.getElementById(id);
-      if (el) dockSections.push({ el: el, btn: item });
+      if (el) dockTargets.push({ id: id, btn: item, el: el });
     }
   });
 
-  if (dockSections.length && 'IntersectionObserver' in window) {
-    var dockObs = new IntersectionObserver(function(entries) {
-      entries.forEach(function(e) {
-        var match = dockSections.find(function(s) { return s.el === e.target; });
-        if (!match) return;
+  function updateDock() {
+    var vh = window.innerHeight;
+    // Active zone is the middle 30% of viewport (matches ~ rootMargin: '-35% 0px -35% 0px')
+    var zoneTop = vh * 0.35;
+    var zoneBottom = vh * 0.65;
 
-        if (match.group === 'menu') {
-          if (e.isIntersecting) {
-            menuVisibleCount++;
-          } else {
-            menuVisibleCount--;
-          }
-          menuBtn.classList.toggle('active', menuVisibleCount > 0);
-        } else {
-          if (e.isIntersecting) {
-            match.btn.classList.add('active');
-          } else {
-            match.btn.classList.remove('active');
+    dockTargets.forEach(function(target) {
+      if (target.group === 'menu') {
+        var active = false;
+        for (var i = 0; i < target.els.length; i++) {
+          var el = target.els[i];
+          if (!el) continue;
+          var r = el.getBoundingClientRect();
+          if (r.bottom > zoneTop && r.top < zoneBottom) {
+            active = true;
+            break;
           }
         }
-      });
-    }, { threshold: 0, rootMargin: '-40% 0px -40% 0px' });
-    dockSections.forEach(function(s) { dockObs.observe(s.el); });
+        menuBtn.classList.toggle('active', active);
+      } else {
+        var r = target.el.getBoundingClientRect();
+        var active = r.bottom > zoneTop && r.top < zoneBottom;
+        target.btn.classList.toggle('active', active);
+      }
+    });
   }
+
+  var ticking = false;
+  window.addEventListener('scroll', function() {
+    if (!ticking) {
+      requestAnimationFrame(function() {
+        updateDock();
+        ticking = false;
+      });
+      ticking = true;
+    }
+  }, { passive: true });
+  // Run once on load to set initial state
+  setTimeout(updateDock, 100);
 })();
 </script>
 </body>
